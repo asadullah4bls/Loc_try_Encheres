@@ -1844,8 +1844,8 @@ migrate = Migrate(app, db)  # noqa: F841
 # mail = Mail(app)
 
 
-# if __name__ == "__main__":
-#     app = create_app()
+if __name__ == "__main__":
+    #app = create_app()
 
 #     # Database configuration
 
@@ -1861,4 +1861,4 @@ migrate = Migrate(app, db)  # noqa: F841
 
 #     # # mail = Mail(app)
 
-#     app.run(debug=False)
+    app.run()
