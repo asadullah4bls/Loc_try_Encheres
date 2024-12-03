@@ -1,5 +1,4 @@
 conf/**
-.env
 venv/
 __pycache__/
 *.py[cod]
@@ -18,3 +17,5 @@ test*.html
 Specification.txt
 enchres_env/
 env/
+requirenments.txt
+requirements.txt
