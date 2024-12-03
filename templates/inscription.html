@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+
+{% block title %}Inscription{% endblock %}
+
+{% block content %}
+<!-- <form id="register" onsubmit="return validateForm()"> -->
+    <form action="{{ url_for('inscription') }}" method="POST" id="register">
+        {{ form.hidden_tag() }}  <!-- This includes the CSRF token -->
+        <div class="container">
+            <h1>Inscription</h1>
+            <p>Veuillez remplir ce formulaire pour créer un compte.</p>
+            <!-- Error message area -->
+            {% if error_message %}
+            <p class="error_msg" id="error-message">{{ error_message }}</p>
+            {% endif %}
+            <p class="error_msg" id="error-message-script" style="display: none;"></p>
+            <hr>
+
+            <label for="firstname"><b>Prénom</b></label>
+            <input type="text" placeholder="Entrez votre Prénom" name="firstname" id="firstname" value="{{ request.form.get('firstname', '') }}" >
+
+            <label for="name"><b>Nom</b></label>
+            <input type="text" placeholder="Entrez votre Nom" name="name" id="name" value="{{ request.form.get('name', '') }}"  >
+
+            <label for="phone"><b>Téléphone</b></label>
+            <!--<input type="number" placeholder="Entrez votre Téléphone" name="phone" id="phone" required>-->
+            <input type="text" placeholder="Entrez votre Téléphone" name="phone" id="phone"    value="{{ request.form.get('phone', '') }}" oninput="validatePhone(this)" />
+
+            
+            <label for="email"><b>Email</b></label>
+            <input type="email" placeholder="Entrez votre Email" name="email" id="email" value="{{ request.form.get('email', '') }}" >
+
+            <label for="post-code"><b>Code postal</b></label>
+            <input type="number" placeholder="Entrez votre Code postal" name="post-code" id="post-code" value="{{ request.form.get('post-code', '') }}" >
+
+            <label for="address"><b>Adresse</b></label>
+            <input type="text" placeholder="Entrez votre Adresse" name="address" id="address" value="{{ request.form.get('address', '') }}">
+    
+            <label for="password"><b>Mot de passe</b></label>
+            <input type="password" placeholder="Entrez votre mot de passe" name="password" id="password" >
+    
+            <label for="password-repeat"><b>Répétez le mot de passe</b></label>
+            <input type="password" placeholder="Répétez le mot de passe" name="password-repeat" id="password-repeat" >
+            <hr>
+            <div style="display: flex; align-items: flex-start;">
+                <input   type="checkbox" id="terms-checkbox" name= "terms-checkbox" style="margin-right: 8px;"  {% if request.form.get('terms-checkbox') %}checked{% endif %} >
+                <label for="terms-checkbox" style="flex: 1; margin-top:2px;">
+                    En créant un compte, vous acceptez nos 
+                    <a href="{{ url_for('conditions') }}">Conditions d'utilisation & Politique de confidentialité</a>.
+                </label>
+            </div>
+            <hr>
+            <div  class="g-recaptcha" data-sitekey="6LdlnooqAAAAAGPBP_jjP8JZl6VmnurDRg2Zx9hy"></div>
+            <button type="submit" class="registerbtn">S'inscrire</button>
+        </div>
+    
+        <div class="container signin">
+            <p>Vous avez déjà un compte ? <a href="{{ url_for('connexion') }}">Se connecter</a>.</p>
+        </div>
+    </form>
+    
+
+<!-- JavaScript for validation -->
+<script>
+    function validatePhone(input) {
+        // Remove invalid characters
+        input.value = input.value.replace(/[^+\d]/g, '');
+        
+        // Ensure only one '+' at the beginning
+        if (input.value.indexOf('+') > 0) {
+            input.value = input.value.replace('+', '');
+        }
+    }
+</script>
+
+<script>
+    document.getElementById('register').addEventListener('submit', function(event) {
+        const passwordField = document.getElementById('password');
+        const errorMessage = document.getElementById('error-message-script');
+        const password = passwordField.value;
+
+        // Regular expression to check the password criteria
+        const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{7,}$/;
+
+        // Check reCAPTCHA response
+        const recaptchaResponse = grecaptcha.getResponse();
+
+        if (!passwordPattern.test(password)) {
+            event.preventDefault(); // Prevent form submission
+            errorMessage.textContent = "Le mot de passe doit contenir au moins 7 caractères, incluant des lettres, des chiffres et un caractère spécial.";
+            errorMessage.style.display = 'block';
+            errorMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } else if (!recaptchaResponse) {
+            event.preventDefault(); // Prevent form submission
+            errorMessage.textContent = "Veuillez vérifier le reCAPTCHA avant de soumettre le formulaire.";
+            errorMessage.style.display = 'block';
+            errorMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } else {
+            errorMessage.style.display = 'none'; // Hide the error message if valid
+        }
+    });
+</script>
+
+
+{% block footer %}
+<!-- Footer is disabled for this page -->
+{% endblock %}
+
+
+{% endblock %}

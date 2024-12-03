@@ -1,0 +1,187 @@
+{% extends 'base.html' %}
+
+{% block title %}Connexion{% endblock %}
+
+{% block content %}
+
+<!-- <div class="flex-container"> -->
+  
+  <!-- Bloc d'inscription -->
+  <!-- <form action="/register_page.php" id="register">
+    <div class="container">
+      <h1>Inscription</h1>
+      <p>Veuillez remplir ce formulaire pour créer un compte.</p>
+      <hr>
+
+      <label for="email"><b>Email</b></label>
+      <input type="text" placeholder="Entrez votre Email" name="email" id="email" required>
+
+      <label for="psw"><b>Mot de passe</b></label>
+      <input type="password" placeholder="Entrez votre mot de passe" name="psw" id="psw" required>
+
+      <label for="psw-repeat"><b>Répétez le mot de passe</b></label>
+      <input type="password" placeholder="Répétez le mot de passe" name="psw-repeat" id="psw-repeat" required>
+      <hr>
+      <p>En créant un compte, vous acceptez nos <a href="#">Conditions d'utilisation & Politique de confidentialité</a>.</p>
+
+      <button type="submit" class="registerbtn">S'inscrire</button>
+    </div>
+    
+    <div class="container signin">
+      <p>Vous avez déjà un compte ? <a href="#login">Se connecter</a>.</p>
+    </div>
+  </form> -->
+
+  <!-- Bloc de connexion -->
+  <!-- <form action="/login_page.php" id="login">
+    <div class="container">
+      <h1>Connexion</h1>
+      <p>Veuillez entrer vos informations pour vous connecter.</p>
+      <hr>
+
+      <label for="email"><b>Email</b></label>
+      <input type="text" placeholder="Entrez votre Email" name="email" id="email" required>
+
+      <label for="psw"><b>Mot de passe</b></label>
+      <input type="password" placeholder="Entrez votre mot de passe" name="psw" id="psw" required>
+      <hr>
+      <button type="submit" class="loginbtn">Se connecter</button>
+    </div>
+    
+    <div class="container signin">
+      <p>Vous avez oublié votre mot de passe ? <a href="#reset">Réinitialiser le mot de passe</a>.</p>
+      <p>Vous n'avez pas de compte ? <a href="#register">S'inscrire</a>.</p>
+    </div>
+  </form> -->
+
+  <!-- Bloc de réinitialisation du mot de passe -->
+  <!-- <form action="/reset_password.php" id="reset">
+    <div class="container">
+      <h1>Réinitialisation du mot de passe</h1>
+      <p>Veuillez entrer votre adresse email pour réinitialiser votre mot de passe.</p>
+      <hr>
+
+      <label for="email"><b>Email</b></label>
+      <input type="email" placeholder="Entrez votre Email" name="email" id="email" required>
+
+      <hr>
+      <button type="submit" class="resetbtn">Réinitialiser le mot de passe</button>
+    </div>
+    
+    <div class="container signin">
+      <p>Vous avez déjà un compte ? <a href="#login">Se connecter</a>.</p>
+      <p>Vous n'avez pas de compte ? <a href="#register">S'inscrire</a>.</p>
+    </div>
+  </form>
+
+</div> -->
+<form action="{{ url_for('connexion') }}" method="POST" id="login">
+  {{ form.hidden_tag() }}  <!-- This includes the CSRF token -->
+  <div class="container">
+      <h1>Connexion</h1>
+      <p>Veuillez entrer vos informations pour vous connecter.</p>
+      <hr>
+
+          {% if error_message %}
+            <p class="error_msg" id="error-message">{{ error_message }}</p>
+          {% endif %}
+          <p class="error_msg" id="error-message-script" style="display: none;"></p>
+
+
+          <!-- {% if success_message %}
+          <p class="success_msg" id="success-message">{{ success_message }}</p>
+          {% endif %} -->
+
+      <label for="email"><b>Email</b></label>
+      {% if  email_f %}
+        <input type="text"  value="{{email}}" name="email" id="email" > 
+      {%else%}
+        <input type="text" placeholder="Entrez votre Email" name="email" id="email" value="{{ request.form.get('firstname', '') }}" >
+      {% endif %}
+      
+
+      <label for="psw"><b>Mot de passe</b></label>
+      {% if  pass_f %}
+        <input type="password" value="{{ password}}" name="psw" id="psw" required>
+      {%else%}
+        <input type="password" placeholder="Entrez votre mot de passe" name="psw" id="psw" required>
+      {% endif %}
+      
+      <label style= "margin-top:10px;">
+        <input type="checkbox" name="remember_me" id="remember_me">
+        <b>Se souvenir de moi</b>
+      </label>
+      <hr>
+      <div class="g-recaptcha" data-sitekey="6LdlnooqAAAAAGPBP_jjP8JZl6VmnurDRg2Zx9hy"></div>
+
+      <form action="{{ url_for('connexion') }}" method="POST" id="login">
+      <input type="hidden" name="next" value="{{ request.args.get('next') }}">
+      <button type="submit" class="loginbtn">Se connecter</button>
+  </div>
+
+  <div class="container signin">
+      <p>Vous avez oublié votre mot de passe ? <a href="{{ url_for('reinitialisation') }}">Réinitialiser le mot de passe</a>.</p>
+      <p>Vous n'avez pas de compte ? <a href="{{ url_for('inscription') }}">S'inscrire</a>.</p>
+      <p>Nos termes et conditions <a href="{{ url_for('conditions') }}">Conditions d'utilisation & Politique de confidentialité</a>.</p>
+
+  </div>
+</form>
+
+<!-- JavaScript for validation -->
+<script>
+  // Dynamically set the password value
+  const passwordValue = "{{ password }}"; // Pass the value from the Flask context
+  document.getElementById("psw").value = passwordValue;
+</script>
+<script>
+  function validateForm() {
+      const errorMessage = document.getElementById('error-message');
+
+      if (errorMessage && errorMessage.innerText) {
+          // Show the error message
+          errorMessage.style.display = 'block';
+          return false;  // Prevent form submission
+      } else {
+          // Hide the error message if passwords match
+          errorMessage.style.display = 'none';
+          return true;  // Allow form submission
+      }
+
+      if (successMessage && successMessage.innerText) {
+          // Show the error message
+          successMessage.style.display = 'block';
+          return true;  // Prevent form submission
+      } else {
+          // Hide the error message if passwords match
+          successMessage.style.display = 'none';
+          return false;  // Allow form submission
+      }
+  }
+</script>
+
+<script>
+  document.getElementById('login').addEventListener('submit', function(event) {
+      
+      const errorMessage = document.getElementById('error-message-script');
+  
+      // Check reCAPTCHA response
+      const recaptchaResponse = grecaptcha.getResponse();
+
+      if (!recaptchaResponse) {
+          event.preventDefault(); // Prevent form submission
+          errorMessage.textContent = "Veuillez vérifier le reCAPTCHA avant de soumettre le formulaire.";
+          errorMessage.style.display = 'block';
+          errorMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } else {
+          errorMessage.style.display = 'none'; // Hide the error message if valid
+      }
+  });
+</script>
+
+{% block footer %}
+<!-- Footer is disabled for this page -->
+{% endblock %}
+
+{% endblock %}
+
+

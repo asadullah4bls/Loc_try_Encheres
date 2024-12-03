@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block title %}Réinitialisation du mot de passe{% endblock %}
+
+{% block content %}
+<!-- Flash message block -->
+<!-- {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="alert">
+      {% for category, message in messages %}
+        <p class="{{ category }}">{{ message }}</p>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %} -->
+
+<form action="{{ url_for('reinitialisation') }}" method="POST" id="reset">
+  {{ form.hidden_tag() }}  <!-- This includes the CSRF token -->
+
+
+    <div class="container">
+        <h1>Réinitialisation du mot de passe</h1>
+        <p>Veuillez entrer votre adresse email pour réinitialiser votre mot de passe.</p>
+        <hr>
+
+        {% if error_message %}
+        <p class="error_msg" id="error-message">{{ error_message }}</p>
+        {% endif %}
+        <!-- {% if success_message %}
+        <p class="success_msg" id="success-message">{{ success_message }}</p>
+        {% endif %} -->
+
+        <label for="email"><b>E-mail</b></label>
+        <input type="email" placeholder="Entrez votre E-mail" name="email" id="email" value="{{ request.form.get('email', '') }}"required>
+
+        <label for="phone"><b>Téléphone</b></label>
+        <input type="text" placeholder="Entrez votre Téléphone" name="phone" id="phone"    value="{{ request.form.get('phone', '') }}" oninput="validatePhone(this)" />
+
+
+        <hr>
+
+        <button type="submit" class="resetbtn">Réinitialiser le mot de passe</button>
+    </div>
+
+    <div class="container signin">
+        <p>Vous avez déjà un compte ? <a href="{{ url_for('connexion') }}">Se connecter</a>.</p>
+        <p>Vous n'avez pas de compte ? <a href="{{ url_for('inscription') }}">S'inscrire</a>.</p>
+    </div>
+</form>
+
+
+
+<script>
+  function validatePhone(input) {
+      // Remove invalid characters
+      input.value = input.value.replace(/[^+\d]/g, '');
+      
+      // Ensure only one '+' at the beginning
+      if (input.value.indexOf('+') > 0) {
+          input.value = input.value.replace('+', '');
+      }
+  }
+</script>
+
+
+<!-- JavaScript for validation -->
+<script>
+  function validateForm() {
+      const errorMessage = document.getElementById('error-message');
+      const successMessage = document.getElementById('success-message');
+
+      if (errorMessage && errorMessage.innerText) {
+          // Show the error message
+          errorMessage.style.display = 'block';
+          return false;  // Prevent form submission
+      } else {
+          // Hide the error message if passwords match
+          errorMessage.style.display = 'none';
+          return true;  // Allow form submission
+      }
+
+
+  }
+</script>
+
+{% block footer %}
+<!-- Footer is disabled for this page -->
+{% endblock %}
+
+{% endblock %}

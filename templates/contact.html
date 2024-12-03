@@ -1,0 +1,61 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Contact{% endblock %}
+
+{% block content %}
+
+<div class="container">
+  <h1>Contactez-nous</h1>
+  <form action="/submit_contact" method="post" id ="contact_form">
+    {{ form.hidden_tag() }}  <!-- This includes the CSRF token -->
+
+    {% if error_message %}
+      <p class="error_msg" id="error-message">{{ error_message }}</p>
+    {% endif %}
+    <p class="error_msg" id="error-message-script" style="display: none;"></p>
+
+
+    <label for="name">Nom complet :</label>
+    <input type="text" id="name" name="name" placeholder="Votre nom complet"  value="{{ request.form.get('name', '') }}" required>
+
+    <label for="email">Adresse e-mail :</label>
+    <input type="email" id="email" name="email" placeholder="Votre adresse e-mail" value="{{ request.form.get('email', '') }}" required>
+
+    <label for="subject">Sujet :</label>
+    <input type="text" id="subject" name="subject" placeholder="Objet de votre message" value="{{ request.form.get('subject', '') }}" required>
+
+    <label for="message">Message :</label>
+    <textarea id="message" name="message" placeholder="Votre message"  value="{{ request.form.get('message', '') }}" required></textarea>
+    <div style= "margin-top:10px;" class="g-recaptcha" data-sitekey="6LdlnooqAAAAAGPBP_jjP8JZl6VmnurDRg2Zx9hy"></div>
+    <button type="submit">Envoyer</button>
+  </form>
+
+  <!--<div class="info">
+    <h2>Informations de contact</h2>
+    <p>Email : support@monentreprise.com</p>
+    <p>Téléphone : +33 1 23 45 67 89</p>
+    <p>Adresse : 123 Rue de l'Entreprise, 75000 Paris, France</p>
+  </div> --->
+</div>
+
+<script>
+  document.getElementById('contact_form').addEventListener('submit', function(event) {
+      
+      const errorMessage = document.getElementById('error-message-script');
+  
+      // Check reCAPTCHA response
+      const recaptchaResponse = grecaptcha.getResponse();
+
+      if (!recaptchaResponse) {
+          event.preventDefault(); // Prevent form submission
+          errorMessage.textContent = "Veuillez vérifier le reCAPTCHA avant de soumettre le formulaire.";
+          errorMessage.style.display = 'block';
+          errorMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } else {
+          errorMessage.style.display = 'none'; // Hide the error message if valid
+      }
+  });
+</script>
+
+{% endblock %}

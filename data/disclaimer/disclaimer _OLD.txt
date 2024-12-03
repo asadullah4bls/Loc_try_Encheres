@@ -1,0 +1,59 @@
+Les prix des marchés présentés se base sur les fichiers des valeurs foncières DVF produits par l'état.    
+
+Les scénarii présentés n'engagent pas le cabinet d'avocat et ne préjugent pas des prix effectifs au moment de l'enchère.    
+
+Ce fichier n'est qu'une aide à la décision. Le client reste libre de fixer son prix limite, le montant des frais, le montant des travaux.    
+
+   
+
+3 Scénarii
+
+ Sccénario 1 : Prix de marché = prix moyen   
+
+ Sccénario 2 : Prix de marché = 90% du prix moyen   
+
+ Sccénario 3 : Prix de marché = 110% du prix prix moyen   
+
+
+
+25 Montants d'adjudication par scenario
+
+   
+
+11 taux de travaux par scenario 
+
+    0% ► montant total des travaux = 0% * prix adjudication
+
+    5% ► montant total des travaux = 0% * prix adjudication
+
+    10% ► montant total des travaux = 0% * prix adjudication
+
+    15% ► montant total des travaux = 0% * prix adjudication
+
+    20% ► montant total des travaux = 0% * prix adjudication
+
+    25% ► montant total des travaux = 0% * prix adjudication
+
+    30% ► montant total des travaux = 0% * prix adjudication
+
+    35% ► montant total des travaux = 0% * prix adjudication
+
+    40% ► montant total des travaux = 0% * prix adjudication
+
+    45% ► montant total des travaux = 0% * prix adjudication
+
+    50% ► montant total des travaux = 0% * prix adjudication
+
+        
+
+4 taux de frais par scenario
+
+    15% ► montant total des travaux = 15% * prix adjudication
+
+    17.50% ► montant total des travaux = 15% * prix adjudication
+
+    20% ► montant total des travaux = 15% * prix adjudication
+
+    22.50% ► montant total des travaux = 15% * prix adjudication
+
+    25% ► montant total des travaux = 15% * prix adjudication

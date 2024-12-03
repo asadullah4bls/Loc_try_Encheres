@@ -1,0 +1,425 @@
+{% extends 'base.html' %}
+
+{% block title %}Preparer{% endblock %}
+
+{% block content %}
+
+{% if  rep_count %}
+    <div id="rep-consent-banner">
+        <p>Vous avez atteint votre limite de téléchargement de rapports.</p>
+        <button id="accept-mes">d'accord</button>
+    </div>
+{%else%}
+ 
+
+
+    <div class="step">
+        <h2 onclick="toggleDetails('feesSimulator')"><span class="toggle-icon">+</span> Customisez vos rapports</h2>
+        <div class="details" id="feesSimulator">
+
+    <div style="display: flex; justify-content: center;">
+        <img src="{{ user.logo }}" alt="User Logo" style="max-width: 300px; max-height: 300px;">
+    </div>
+
+    <div class="form-customiser" style="width: 50%; margin: 0 25% 0 25%;">
+        <label for="logo">Upload Logo:</label>
+        <input type="file" id="logo" name="logo" accept="image/*" onchange="uploadLogo()">   
+        <!-- <label for="logoLink">Or enter a logo URL:</label> -->
+        <!-- <input type="url" id="logoLink" name="logoLink" value="{{ user.logoLink }}" placeholder="Enter logo URL" disabled> -->
+        <!-- <input type="url" id="logoLink" name="logoLink" value="{{ user.logoLink }}" placeholder="Enter logo URL"> -->
+    </div>
+
+
+    <form method="POST" enctype="multipart/form-data" action="{{ url_for('customise_report') }}">
+        {{ form.hidden_tag() }}  <!-- This includes the CSRF token -->
+
+
+    <!-- <canvas id="colorCanvas" style="display:none; max-width: 300px; max-height: 300px;"></canvas> -->
+    <canvas id="colorCanvas" style="display:none; width: 50%; margin: 0 25% 0 25%;"></canvas>
+        <!-- Color pickers -->
+
+        <div class="form-customiser">
+            <label for="fontFamily">Font Family:</label>
+            <select id="fontFamily" name="fontFamily" onchange="updateFontPreview()">
+                <option value="Arial" {% if user.fontFamily == 'Arial' %}selected{% endif %}>Arial</option>
+                <option value="Times New Roman" {% if user.fontFamily == 'Times New Roman' %}selected{% endif %}>Times New Roman</option>
+                <option value="Courier New" {% if user.fontFamily == 'Courier New' %}selected{% endif %}>Courier New</option>
+                <option value="Georgia" {% if user.fontFamily == 'Georgia' %}selected{% endif %}>Georgia</option>
+                <option value="Verdana" {% if user.fontFamily == 'Verdana' %}selected{% endif %}>Verdana</option>
+                <option value="Cambria" {% if user.fontFamily == 'Cambria' %}selected{% endif %}>Cambria</option>
+            </select>
+        </div>
+
+        <div class="form-customiser">
+            <label for="bg_color">Couleur d'arrière plan</label>
+            <input type="color" id="bg_color" name="bg_color" value="{{ user.bg_color }}">
+        </div>
+
+        <div class="form-customiser">
+            <label for="bg_font_color">Couleur de la police à associer à l'arrière plan</label>
+            <input type="color" id="bg_font_color" name="bg_font_color" value="{{ user.bg_font_color }}">
+        </div>
+        <div class="form-customiser">
+            <!-- <label for="fontPreview">Font Previews:</label> -->
+            <div id="fontPreview1" style="font-size: 12px; border: 1px solid #ccc; padding: 10px;">
+                Aperçu du style de l'arrière plan
+            </div>
+        </div>
+
+
+        <div class="form-customiser">
+            <label for="title_color">Couleur des titre:</label>
+            <input type="color" id="title_color" name="title_color" value="{{ user.title_color }}">
+        </div>
+        <div class="form-customiser">
+            <label for="title_font_color">Couleur de la police des titres:</label>
+            <input type="color" id="title_font_color" name="title_font_color" value="{{ user.title_font_color }}">
+        </div>
+
+        <div class="form-customiser">
+            <div id="fontPreview2" style="font-size: 12px; border: 1px solid #ccc; padding: 10px;">
+                Aperçu du style des titres
+            </div>
+        </div>
+
+
+        <div class="form-customiser">
+            <label for="attribut_color">Couleur des attributs:</label>
+            <input type="color" id="attribut_color" name="attribut_color" value="{{ user.attribut_color }}">
+        </div>
+        <div class="form-customiser">
+            <label for="attribut_font_color">Couleur de la police des attributs:</label>
+            <input type="color" id="attribut_font_color" name="attribut_font_color" value="{{ user.attribut_font_color }}">
+        </div>
+
+        <div class="form-customiser">
+            <div id="fontPreview3" style="font-size: 12px; border: 1px solid #ccc; padding: 10px;">
+                Aperçu du style des attributs
+            </div>
+        </div>
+
+        <!-- <button type="button" onclick="enableInputs()">Edit Profile</button> -->
+        <button type="submit">Update Profile</button>
+        <button type="button" onclick="window.location.reload()">Cancel</button>
+    </form>
+            </div>
+        </div>
+
+    <form method="POST" action="{{ url_for('preparer') }}" id="report-form">
+        {{ form.hidden_tag() }}  <!-- This includes the CSRF token -->
+        <label for="city">Select City:</label>
+        <!-- <select name="city" id="city">
+            {% for city in cities %}
+                <option value="{{ city }}">{{ city }}</option>
+            {% endfor %}
+        </select> -->
+
+        <input list="cities" name="city" id="city" placeholder="Type or select a city" required>
+        <datalist id="cities">
+            {% for city in cities %}
+                <option value="{{ city }}">{{ city }}</option>
+            {% endfor %}
+        </datalist>
+
+        <br><br>
+        
+        <label for="property_type">Select Property Type:</label>
+        <select name="property_type" id="property_type">
+            <option value="Appartement">Appartement</option>
+            <option value="Maison">Maison</option>
+        </select>
+        <br><br>
+        
+        <div class="loader" style="display: none;"></div>
+        
+        <button type="submit" id="genrep-button">Generate Report</button>
+    </form>
+
+
+    <div id="message-container"></div>
+
+
+{%endif%}
+
+{% if  rep_count %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const banner = document.getElementById('rep-consent-banner');
+            const acceptButton = document.getElementById('accept-mes');
+
+            
+
+            acceptButton.addEventListener('click', function() { 
+                banner.style.display = 'none';
+            });
+        });
+    </script>
+
+{%else%}
+
+    <button type="button" id="download-button">Download Report</button>
+
+            <script>
+
+                    document.addEventListener('DOMContentLoaded', function() {
+                        const form = document.getElementById('report-form');
+                        const downloadButton = document.getElementById('download-button');
+                        const messageContainer = document.getElementById('message-container');
+                        const loader = document.querySelector('.loader');  // Reference to the loader
+                        const genrepButton = document.getElementById('genrep-button');
+
+                        form.addEventListener('submit', function(event) {
+                            event.preventDefault(); // Prevent default form submission
+                            loader.style.display = 'block';  // Show the loader
+                
+                            const formData = new FormData(form);
+                            fetch(form.action, {
+                                method: 'POST',
+                                body: formData
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                messageContainer.innerHTML = `<div class="message ${data.message_class}">${data.message}</div>`;
+                                
+                                // if (data.report_available) {
+                                //     downloadButton.style.display = 'inline'; // Show the download button
+                                //     downloadButton.setAttribute('data-report-name', data.report_name);
+                                // } else {
+                                //     downloadButton.style.display = 'none'; // Hide the download button
+                                // }
+
+                                // ---------------------- TEST
+                                if (data.message_class === 'success') {
+                                    if (data.report_available) {
+                                        console.log("prep htm av");
+                                        
+                                        downloadButton.style.display = 'inline'; // Show the download button
+                                        downloadButton.setAttribute('data-report-name', data.report_name);
+                                    } else {
+                                        console.log("prep htm no av");
+                                        downloadButton.style.display = 'none'; // Hide the download button
+                                    }
+
+                                    if (data.reports_count_flag === "false") {
+                                        console.log("Reports count flag is false");
+                                        genrepButton.style.display = 'none'; // Hide the "Generate Report" button
+                                    } else {
+                                        console.log("Reports count flag is true");
+                                    }
+                                }
+                                // ---------------------- END TEST
+                            })
+                            .catch(error => console.error('Error submitting the form:', error))
+                            .finally(() => {
+                            loader.style.display = 'none';  // Hide the loader after response
+                            });
+                            
+                        });
+                
+                        downloadButton.addEventListener('click', function() {
+                            const reportName = this.getAttribute('data-report-name');
+                            const downloadUrl = `{{ url_for('download', report_name='') }}${reportName}`;
+                
+                            fetch(downloadUrl)
+                                .then(response => {
+                                    if (response.ok) {
+                                        return response.blob();
+                                    } else {
+                                        throw new Error('File not found');
+                                    }
+                                })
+                                .then(blob => {
+                                    const url = window.URL.createObjectURL(blob);
+                                    const a = document.createElement('a');
+                                    a.style.display = 'none';
+                                    a.href = url;
+                                    a.download = reportName;
+                                    document.body.appendChild(a);
+                                    a.click();
+                                    window.URL.revokeObjectURL(url);
+                
+                                    // Remove the message and button after download
+                                    messageContainer.innerHTML = '';
+                                    downloadButton.style.display = 'none';
+                                })
+                                .catch(error => console.error('Error downloading the file:', error));
+                        });
+                    });
+
+
+        function validateForm() {
+            const successMessage = document.getElementById('success-message');
+
+            if (successMessage && successMessage.innerText) {
+                // Show the error message
+                successMessage.style.display = 'block';
+                return false;  // Prevent form submission
+            } else {
+                // Hide the error message if passwords match
+                successMessage.style.display = 'none';
+                return true;  // Allow form submission
+            }
+        }
+
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const input = document.getElementById('city');
+            const datalist = document.getElementById('cities');
+
+            let timeout;
+            input.addEventListener('input', function() {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => {
+                    // Optionally, you can filter the options based on input value
+                    const value = input.value.toLowerCase();
+                    const options = Array.from(datalist.options);
+                    options.forEach(option => {
+                        option.style.display = option.value.toLowerCase().includes(value) ? 'block' : 'none';
+                    });
+                }, 300); // Adjust the delay as needed
+            });
+        });
+        
+        
+
+        
+    function uploadLogo() {
+        const logoInput = document.getElementById('logo');
+        const formData = new FormData();
+        // formData.append('logo', logoInput.files[0]);
+
+        fetch('/upload_logo', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.url) {
+                loadLogoToCanvas(data.url);
+            } else {
+                console.error(data.error);
+            }
+        })
+        .catch(error => console.error('Error uploading logo:', error));
+    }
+
+
+    // Update the font preview dynamically based on user selection
+    function updateFontPreview() {
+        const fontFamily = document.getElementById('fontFamily').value;
+        
+        // Get color values
+        const bgColor = document.getElementById('bg_color').value;
+        const bgFontColor = document.getElementById('bg_font_color').value;
+        const titleColor = document.getElementById('title_color').value;
+        const titleFontColor = document.getElementById('title_font_color').value;
+        const attributColor = document.getElementById('attribut_color').value;
+        const attributFontColor = document.getElementById('attribut_font_color').value;
+
+        // Update previews
+        const preview1 = document.getElementById('fontPreview1');
+        preview1.style.fontFamily = fontFamily;
+        preview1.style.backgroundColor = bgColor;
+        preview1.style.color = bgFontColor;
+
+        const preview2 = document.getElementById('fontPreview2');
+        preview2.style.fontFamily = fontFamily;
+        preview2.style.backgroundColor = titleColor;
+        preview2.style.color = titleFontColor;
+
+        const preview3 = document.getElementById('fontPreview3');
+        preview3.style.fontFamily = fontFamily;
+        preview3.style.backgroundColor = attributColor;
+        preview3.style.color = attributFontColor;
+    }
+
+
+    // Attach event listeners to update previews on input change
+    document.getElementById('fontFamily').addEventListener('change', updateFontPreview);
+    document.getElementById('bg_color').addEventListener('input', updateFontPreview);
+    document.getElementById('bg_font_color').addEventListener('input', updateFontPreview);
+    document.getElementById('title_color').addEventListener('input', updateFontPreview);
+    document.getElementById('title_font_color').addEventListener('input', updateFontPreview);
+    document.getElementById('attribut_color').addEventListener('input', updateFontPreview);
+    document.getElementById('attribut_font_color').addEventListener('input', updateFontPreview);
+
+
+    function uploadLogo() {
+        const logoInput = document.getElementById('logo');
+        const formData = new FormData();
+        // formData.append('logo', logoInput.files[0]);
+
+        fetch('/upload_logo', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.url) {
+                loadLogoToCanvas(data.url);
+            } else {
+                console.error(data.error);
+            }
+        })
+        .catch(error => console.error('Error uploading logo:', error));
+    }
+
+    function uploadLogo() {
+        const logoInput = document.getElementById('logo');
+        const formData = new FormData();
+        formData.append('logo', logoInput.files[0]);
+
+        fetch('/upload_logo', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.url) {
+                loadLogoToCanvas(data.url);
+            } else {
+                console.error(data.error);
+            }
+        })
+        .catch(error => console.error('Error uploading logo:', error));
+    }
+
+    function loadLogoToCanvas(url) {
+        const canvas = document.getElementById('colorCanvas');
+        const ctx = canvas.getContext('2d');
+        const img = new Image();
+        img.src = url;
+        img.onload = () => {
+            canvas.width = img.width;
+            canvas.height = img.height;
+            ctx.drawImage(img, 0, 0);
+            canvas.style.display = 'block';
+        };
+
+        canvas.addEventListener('click', function(event) {
+            const rect = canvas.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+            const pixel = ctx.getImageData(x, y, 1, 1).data;
+            const color = `rgb(${pixel[0]}, ${pixel[1]}, ${pixel[2]})`;
+            document.getElementById('selectedColors').innerHTML += `<div style="width: 30px; height: 30px; background-color: ${color}; display: inline-block;"></div>`;
+        });
+    }
+
+    function toggleDetails(id) {
+            var details = document.getElementById(id);
+            var icon = details.previousElementSibling.querySelector('.toggle-icon');
+            if (details.style.display === "none" || details.style.display === "") {
+                details.style.display = "block";
+                icon.textContent = "-";
+            } else {
+                details.style.display = "none";
+                icon.textContent = "+";
+            }
+        }
+
+        
+        </script>
+
+{%endif%}
+{% endblock %}

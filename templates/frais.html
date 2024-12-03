@@ -1,0 +1,318 @@
+{% extends 'base.html' %}
+
+{% block title %}Frais{% endblock %}
+
+{% block content %}
+
+<div class="step-container">
+    <!-- Répartition des frais et honoraires -->
+    <div class="step">
+        <h2 onclick="toggleDetails('fees')"><span class="toggle-icon">+</span> Répartition des frais et honoraires</h2>
+        <div class="details" id="fees">
+            <div class="content">
+                
+                <div class="highlight">
+                    <h3>Avant l'enchère (frais fixes)</h3>
+                    <ul>
+                        <li>
+                            
+                            <div class="highlight_sub">
+                                <strong>Honoraires de l'avocat :</strong>
+                                <ul>
+                                    <li>Frais de représentation : 200 à 600 €</li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li>
+                            
+                            <div class="highlight_sub">
+                                <strong>Frais préalables de saisie :</strong>
+                            exposés par l’avocat poursuivant pour parvenir à la vente sur saisie immobilière 
+                            (coût des actes et diligences de l’huissier de justice et de l’avocat, frais de publicité, …), 
+                            montant communiqué quelques jours avant l'audience
+        
+                                <ul>
+                                    <li>entre 5 000 € et 7 000 €</li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            
+                <div class="highlight">
+                    <h3>En cas d'adjudication</h3>
+                    <ul>
+                        <li>
+                            
+                            <div class="highlight_sub">
+                                <strong>Frais immédiats à régler :</strong>
+                                <ul>
+                                    <li>
+                                        <a target="_blank" href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000041684399">
+                                            <strong>Émoluments des avocats</strong>
+                                        </a>
+                                        , calculés par tranches, sur le prix (ajouter 20 % de TVA), les émoluments se répartissent pour ¾ pour le créancier poursuivant et pour ¼ pour l’adjudicataire :
+                                        <ul>
+                                            <li>Prix < 6 500 € : 7.256%</li>
+                                            <li>6 500 € - 17 000 € : ((prix - 6 500) x 2.993%) + 472 €</li>
+                                            <li>17 000 € - 60 000 € : ((prix - 17 000) x 1.995%) + 786 €</li>
+                                            <li>60 000 € : ((prix - 60 000) x 1.497%) + 1 644 €</li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li>
+                            
+                            <div class="highlight_sub">
+                                <strong>Droits d'enregistrement à la Recette des Impôts </strong>(à verser au Trésor Public)
+                                <ul>
+                                    <li><strong>Pour les particuliers :</strong>
+                                        <ul>
+                                            <li><a target="_blank" href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000030024636">Une taxe départementale</a> sur le prix d’adjudication de 4,50%</li>
+                                            <li>Une taxe communale additionnelle sur le prix d’adjudication de 1,20%</li>
+                                            <li><a target="_blank" href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000048637972">Des frais d’assiette et de recouvrement</a> de 2,37 % sur le montant de la taxe départementale</li>
+                                        </ul>
+                                    </li>
+                                    <li><strong>Pour les marchands de bien :</strong>
+                                        <ul>
+                                            <li>0.715% du prix principal + 2.37% du droit d’enregistrement</li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            
+                <div class="highlight">
+                    <h3>Frais de publication et autres frais</h3>
+                    <ul>
+                        <li>
+                            
+                            <div class="highlight_sub">
+                                <strong>Frais de publication au Service de la Publicité Foncière :</strong>
+                                <ul>
+                                    <li>0.1% du prix de vente (+ 12 € de frais), avec un minimum de 15 € et un droit fixe de 46 €, sous réserves des mentions complémentaires dans certains cas</li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li>
+                            
+                            <div class="highlight_sub">
+                                <strong>Frais de radiation des inscriptions hypothécaires :</strong>
+                                <ul>
+                                    <li>1€ pour 1 000 € d’inscription</li>
+                                </ul>
+                            </div>
+                        </li>
+                        <div class="highlight_sub">
+                            <li><strong>Frais supplémentaires</strong>, selon le tarif des huissiers</li>
+                        </div>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Simulateur de frais -->
+    <div class="step">
+        <h2 onclick="toggleDetails('feesSimulator')"><span class="toggle-icon">+</span> Simulez vos frais d'adjudication</h2>
+        <div class="details" id="feesSimulator">
+            <form id="fraisForm">
+                {{ form.hidden_tag() }}  <!-- This includes the CSRF token -->
+                <div class="form-group">
+                    <label for="user_type">Type d'utilisateur :</label>
+                    <select id="user_type" name="user_type" required>
+                        <option value="particulier">Particulier</option>
+                        <option value="professionnel">Professionnel</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <!-- <label class="flashing" for="prix_adjudication"> -->
+                    <label for="prix_adjudication">
+                        <a target="_blank" href="/preparer">Prix d'adjudication</a>
+                        <span class="tooltip">?
+                            <span class="tooltiptext">Votre prix limite d'enchère (montant de l'enchère gagnante).</span>
+                        </span> :
+                    </label>
+                    <input type="number" id="prix_adjudication" name="prix_adjudication" required>
+                </div>
+                <div class="form-group">
+                    <label for="frais_representation">Frais de représentation de l'avocat
+                        <span class="tooltip">?
+                            <span class="tooltiptext">Honoraires au titre de la représentation par l'avocat.</span>
+                        </span> :
+                    </label>
+                    <input type="number" id="frais_representation" name="frais_representation" required>
+                </div>
+                <div class="form-group">
+                    <label for="frais_prealable">Frais préalables de saisie
+                        <span class="tooltip">?
+                            <span class="tooltiptext">Frais exposés par l’avocat poursuivant pour parvenir à la vente 
+                                (cf. cahier des conditions de vente)</span>
+                        </span> :
+                    </label>
+                    <input type="number" id="frais_prealable" name="frais_prealable" required>
+                </div>
+                <div class="form-group">
+                    <label for="autres_frais">Autres frais de procédure
+                        <span class="tooltip">?
+                            <span class="tooltiptext">Frais supplémentaires liés à la procédure. Garder à zéro si montant inconnu.</span>
+                        </span> :
+                    </label>
+                    <input type="number" id="autres_frais" name="autres_frais" required>
+                </div>
+                <button type="submit">Calculer les frais</button>
+            </form>
+
+            <!-- <div id="results" style="display:none;">
+                <h2>Résultats</h2>
+                <p>Prix d'Adjudication : <span id="prix_adjudication"></span> €</p>
+                <p>+ Total des frais : <span id="total_frais"></span> €</p>
+                <p>     Émoluments TTC : <span id="emoluments"></span> €</p>
+                <p>         Émoluments Hors Taxe : <span id="emoluments_ht"></span> €</p>
+                <p>         TVA sur émolument : <span id="tva"></span> €</p>
+                
+                <p>     Droits d'enregistrement : <span id="droits_enregistrement"></span> €</p>
+                <p>     Frais de publication : <span id="frais_publication"></span> €</p>
+                <p>     Frais de radiation : <span id="frais_radiation"></span> €</p>
+                
+                <p>= Coût total de l'opération : <span id="cout_operation"></span> €</p>
+            </div> -->
+
+            <div id="results" style="display:none;">
+                <h2>Résultats</h2>
+                <p><strong>Prix d'Adjudication : <span id="prix_adjudication"></span> €</strong></p>
+                
+                <!-- <p>+ Total des frais :</p> -->
+                <p><strong>Total des frais : <span id="total_frais"></span> €</strong></p>
+                <ul>
+                    <li>Émoluments TTC : <span id="emoluments"></span> €</li>
+                    <ul>
+                        <li>Émoluments Hors Taxe : <span id="emoluments_ht"></span> €</li>
+                        <li>TVA sur émolument : <span id="tva"></span> €</li>
+                    </ul>
+                    <li>Droits d'enregistrement : <span id="droits_enregistrement"></span> €</li>
+                    <li>Frais de publication : <span id="frais_publication"></span> €</li>
+                    <li>Frais de radiation : <span id="frais_radiation"></span> €</li>
+                </ul>
+                
+                <p><strong>Coût total de l'opération : <span id="cout_operation"></span> €</strong></p>
+            </div>
+            
+            <!-- # ####################### FLASH MESSAGE ####################################### -->
+            <div id="flash-message" style="display:none;" class="flash-message">
+                <div class="message-header">
+                    <h2>Résultats</h2>
+                    <button class="close-btn" onclick="closeFlashMessage()">×</button>
+                </div>
+                <div class="message-content">
+                    <p><strong>Prix d'Adjudication : <span id="flash_prix_adjudication"></span> €</strong></p> <!-- Change ID -->
+                    
+                    <p><strong>Total des frais : <span id="flash_total_frais"></span> €</strong></p> <!-- Change ID -->
+                    <ul>
+                        <li>Émoluments TTC : <span id="flash_emoluments"></span> €</li> <!-- Change ID -->
+                        <ul>
+                            <li>Émoluments Hors Taxe : <span id="flash_emoluments_ht"></span> €</li> <!-- Change ID -->
+                            <li>TVA sur émolument : <span id="flash_tva"></span> €</li> <!-- Change ID -->
+                        </ul>
+                        <li>Droits d'enregistrement : <span id="flash_droits_enregistrement"></span> €</li> <!-- Change ID -->
+                        <li>Frais de publication : <span id="flash_frais_publication"></span> €</li> <!-- Change ID -->
+                        <li>Frais de radiation : <span id="flash_frais_radiation"></span> €</li> <!-- Change ID -->
+                    </ul>
+                    
+                    <p><strong>Coût total de l'opération : <span id="flash_cout_operation"></span> €</strong></p> <!-- Change ID -->
+                </div>
+            </div>
+            <!-- # ####################### END FLASH MESSAGE ####################################### -->
+            
+
+
+
+            <!-- <p>Utilisez notre outil de préparation qui intègre l'ensemble des frais pour modéliser la rentabilté.
+                <a target="_blank" href="/outil" class="cta">Découvrir notre outil</a> -->
+            </p>
+        </div>
+    </div>
+</div>
+
+<script>
+    // function toggleDetails(id) {
+    //     var details = document.getElementById(id);
+    //     if (details.classList.contains('active')) {
+    //         details.classList.remove('active');
+    //     } else {
+    //         var allDetails = document.querySelectorAll('.details');
+    //         allDetails.forEach(function(detail) {
+    //             detail.classList.remove('active');
+    //         });
+    //         details.classList.add('active');
+    //     }
+    // }
+    function toggleDetails(id) {
+        var details = document.getElementById(id);
+        var icon = details.previousElementSibling.querySelector('.toggle-icon');
+        if (details.style.display === "none" || details.style.display === "") {
+            details.style.display = "block";
+            icon.textContent = "-";
+        } else {
+            details.style.display = "none";
+            icon.textContent = "+";
+        }
+    }
+
+    document.getElementById('fraisForm').addEventListener('submit', function(event) {
+        event.preventDefault();  // Prevent form from reloading the page
+
+        const formData = new FormData(this);
+
+        fetch('/frais', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Update the result fields with returned data
+            document.getElementById('prix_adjudication').textContent = data.prix_adjudication;
+            document.getElementById('emoluments_ht').textContent = data.emoluments_ht;
+            document.getElementById('tva').textContent = data.tva;
+            document.getElementById('emoluments').textContent = data.emoluments;
+            document.getElementById('droits_enregistrement').textContent = data.droits_enregistrement;
+            document.getElementById('frais_publication').textContent = data.frais_publication;
+            document.getElementById('frais_radiation').textContent = data.frais_radiation;
+            document.getElementById('total_frais').textContent = data.total_frais;
+            document.getElementById('cout_operation').textContent = data.cout_operation;
+
+            // Show the result section
+            document.getElementById('results').style.display = 'block';
+
+            // Show the flash message after the form is successfully processed
+            showFlashMessage();
+        })
+        .catch(error => console.error('Error calculating fees:', error));
+    });
+
+    function showFlashMessage() {
+        document.getElementById("flash_prix_adjudication").textContent = document.getElementById('prix_adjudication').textContent;
+        document.getElementById("flash_total_frais").textContent = document.getElementById('total_frais').textContent;
+        document.getElementById("flash_emoluments").textContent = document.getElementById('emoluments').textContent;
+        document.getElementById("flash_emoluments_ht").textContent = document.getElementById('emoluments_ht').textContent;
+        document.getElementById("flash_tva").textContent = document.getElementById('tva').textContent;
+        document.getElementById("flash_droits_enregistrement").textContent = document.getElementById('droits_enregistrement').textContent;
+        document.getElementById("flash_frais_publication").textContent = document.getElementById('frais_publication').textContent;
+        document.getElementById("flash_frais_radiation").textContent = document.getElementById('frais_radiation').textContent;
+        document.getElementById("flash_cout_operation").textContent = document.getElementById('cout_operation').textContent;
+
+        document.getElementById("flash-message").style.display = "block";
+    }
+
+    function closeFlashMessage() {
+        document.getElementById("flash-message").style.display = "none";
+    }
+
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+
+{% block title %}Pricing{% endblock %}
+
+{% block content %}
+    <div  >
+        <h2 style="text-align:center">Politique de Prix</h2>
+
+       <div class="columns_wrap">
+        <div class="columns">
+            <ul class="price">
+                <li class="header" style="background-color:#04AA6D">Essai</li>
+                <li class="grey">0 €</li>
+                <li>1 rapport offert</li>
+                <li class="grey">
+                    {% if free_flag %}
+                        
+                        <a href="{{ url_for('pricing', free_report='121') }}" class="button" style="background-color:#04AA6D; color: white;">Commander</a>
+                    {% else %}
+                        
+                        <a href="#" class="button disabled">Commander</a>
+                    {% endif %}
+                </li>
+            </ul>
+        </div>
+
+        <div class="columns">
+            <ul class="price">
+                <li class="header">3 mois</li>
+                <li class="grey">300 €</li>
+                <!-- <li>58,50 €</li> -->
+                <!-- <li>Prix unitaire : 58,50 €</li> -->
+                <li>100 € / mois</li>
+                <!-- <li>100 € / mois</li> -->
+                <!-- <li>Prix : 175,50 €</li> -->
+
+    <li class="grey">
+        {% if  subs_flag %}
+            <a href="{{ url_for('paym_form', package='3') }}" class="button">Commander</a>
+        {%else%}
+            <a href="{{ url_for('paym_form', package='3') }}" class="button  disabled">Commander</a>
+        {%endif%}
+    </li>
+    </ul>
+    </div>
+
+        <div class="columns">
+            <ul class="price">
+                <li class="header">6 mois</li>
+                <li class="grey">510 €</li>
+                <!-- <li>55,25 €</li> -->
+                <!-- <li>Prix unitaire : 55,25 €</li> -->
+                <li>85 € / mois</li>
+                <!-- <li>- 58,50 €</li> -->
+                <!-- <li>Prix : 331,50 €</li> -->
+
+    <li class="grey">
+        {% if  subs_flag  %}
+            <a href="{{ url_for('paym_form', package='6') }}" class="button">Commander</a>
+        {%else%}
+            <a href="{{ url_for('paym_form', package='6') }}" class="button  disabled">Commander</a>
+        {%endif%}
+    </li>
+    </ul>
+    </div>
+
+        <div class="columns">
+            <ul class="price">
+                <li class="header" style="background-color:#111"> 1 an</li>
+                <li class="grey">900 €</li>
+                <!-- <li>48,75 €</li> -->
+                <!-- <li>Prix unitaire : 48,75 €</li> -->
+                <li>75 € / mois</li>
+                <!-- <li>- 195,00 €</li> -->
+                <!-- <li>Prix : 585,00 €</li> -->
+
+                <li class="grey">
+        {% if  subs_flag %}
+            <a href="{{ url_for('paym_form', package='12') }}" class="button">Commander</a>
+        {%else%}
+            <a href="{{ url_for('paym_form', package='12') }}" class="button   disabled">Commander</a>
+        {%endif%}
+    </li>
+            </ul>
+        </div>
+       </div>
+    </div>
+    {% if user_reports  %} 
+
+        <div style="display: {% if user_reports  %}Block{% else %}None{% endif %};">
+            <h2 style="text-align:center">Journal des rapports</h2>
+
+            <div style="overflow-x:auto;">
+
+                <table>
+                    <tr>
+                    
+                        <th>Id</th>
+                        <th>City</th>
+                        <th>Property Type</th>
+                        <th>Date</th>
+                        
+                    
+                    </tr>
+
+
+                    {% for report in user_reports %}
+                    <tr>
+                        <td>{{ report.id }}</td>
+                        <td>{{ report.city }}</td>
+                        <td>{{ report.property_type }}</td>
+                        <td>{{ report.download_date.strftime('%d-%m-%Y') }}</td>
+                        
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="4">No Reports found.</td>
+                    </tr>
+                    {% endfor %}
+
+                
+                </table>
+            </div>
+        </div>
+
+    {% else %}
+    {% endif %}
+</div>
+<div>
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <!-- basic -->
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <!-- mobile metas -->
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+        <!-- site metas -->   
+        
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/payment/payment.css') }}">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script type="text/javascript" src="https://js.stripe.com/v1/"></script> 
+        <script type="text/javascript">
+          // this identifies your website in the createToken call below
+            Stripe.setPublishableKey('pk_test_51MeJd8SIjG3FFutohFE21ai2XokOKHiwOj6JANzSd772glCAV6yTtupPXBXP5iYu1zOYhDwY7S5pfZ6QzqcvMuNJ00mxv7NfUO');
+
+            function stripeResponseHandler(status, response) {
+                if (response.error) {
+                    // re-enable the submit button
+                    $('.submit-button').removeAttr("disabled");
+                    // show the errors on the form
+                    $(".payment-errors").html(response.error.message);
+                } else {
+                    var form$ = $("#payment-form");
+                    // token contains id, last4, and card type
+                    var token = response['id'];
+                    // insert the token into the form so it gets submitted to the server
+                    form$.append("<input type='hidden' name='stripeToken' value='" + token + "' />");
+                    // and submit
+                    form$.get(0).submit();
+                }
+            }
+
+            $(document).ready(function() {
+                $("#payment-form").submit(function(event) {
+                    // disable the submit button to prevent repeated clicks
+                    $('.submit-button').attr("disabled", "disabled");
+                    var chargeAmount = 1000; //amount you want to charge, in cents. 1000 = $10.00, 2000 = $20.00 ...
+                    // createToken returns immediately - the supplied callback submits the form if there are no errors
+                    Stripe.createToken({
+                        number: $('#cardnumber').val(),
+                        cvc: $('#cardcvc').val(),
+                        exp_month: $('#expirymonth').val(),
+                        exp_year: $('#expiryyear').val()
+                    }, chargeAmount, stripeResponseHandler);
+                    return false; // submit from callback
+                });
+            });
+
+            if (window.location.protocol === 'file:') {
+                alert("stripe.js does not work when included in pages served over file:// URLs. Try serving this page over a webserver. Contact support@stripe.com if you need assistance.");
+            }
+        </script>
+        <title>Add Payment</title>
+        <meta name="keywords" content="">
+        <meta name="description" content="">
+        <meta name="author" content="">
+    </head>
+    <body>
+        <form action="{{ url_for('SubmittPayment') }}"  id="payment-form" method="post">
+            {{ form.hidden_tag() }}  <!-- This includes the CSRF token -->
+    
+            <div class="container p-0">
+                <div class="card px-4">
+                    <p class="h8 py-3">Payment Details</p>
+                    <div class="row gx-3">
+                        
+                        <div class="col-12">
+                            <div class="d-flex flex-column">
+                                <p class="text mb-1">Card Number</p>
+                                <input class="form-control mb-3" id="cardnumber" name="cardnumber"   type="text" placeholder="1234 5678 435678" value="">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="d-flex flex-column">
+                                <p class="text mb-1">Expiry Month</p>
+                                <input class="form-control mb-3" type="text" id="expirymonth"    name="expiry" placeholder="MM" value="">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="d-flex flex-column">
+                                <p class="text mb-1">CVV/CVC</p>
+                                <input class="form-control mb-3 pt-2 " id="cardcvc"   name="cvc" type="text" placeholder="***">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="d-flex flex-column">
+                                <p class="text mb-1">Expiry Year</p>
+                                <input class="form-control mb-3" type="text"   id="expiryyear" placeholder="YYYY" value="">
+                            </div>
+                        </div>
+                        
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary mb-3">
+                                <span class="ps-3">Submitt</span>
+                                <span class="fas fa-arrow-right"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <input type="text" name="stripe_customer_id" value="{{sid}}" style="display: none;">
+            <input type="text" name="user_id" value="{{user_id}}" style="display: none;">
+        </form>
+        
+
+    </body>
+</html>

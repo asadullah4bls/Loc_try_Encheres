@@ -1,0 +1,27 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Vérification de l'adresse IP{% endblock %}
+
+{% block content %}
+
+<div class="container">
+  <h1>Vérification de l'adresse IP</h1>
+  <form action="/submit_code" method="post">
+    {{ form.hidden_tag() }}  <!-- This includes the CSRF token -->
+    <label for="name">Entrer le Code :</label>
+    <input type="text" id="name" name="name" placeholder="entrer le code" required>
+    <input  type="hidden" id="useri" name="useri" value="{{userz}}">
+    <button type="submit">Soumettre</button> 
+    <button   type="button"   onclick="window.location.href='{{ url_for('code_form', is_res='121', userz=userz) }}'">Renvoyer</button> 
+  </form>
+
+  <!--<div class="info">
+    <h2>Informations de contact</h2>
+    <p>Email : support@monentreprise.com</p>
+    <p>Téléphone : +33 1 23 45 67 89</p>
+    <p>Adresse : 123 Rue de l'Entreprise, 75000 Paris, France</p>
+  </div> --->
+</div>
+
+{% endblock %}

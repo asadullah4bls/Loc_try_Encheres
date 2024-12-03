@@ -1,0 +1,13 @@
+1 - Analyser les décotes --> DECOTES.										
+2 - Identifier le score de la voie (avenue, rue, boulevard…) --> SCORE.
+3 - Evaluer la rareté du bien par : pièce --> VOLUMES_PIECES, surface --> VOLUMES_SURFACES									
+4 - Définir un prix limite en se basant sur les résultats des étapes 2 et 3 --> SCORE.	
+5 - Réaliser vos simulations --> SIMULATEUR_1									
+5.1 - Réaliser une première simulation
+5.2 - Trouver le meilleur compromis entre rentabilité et probabilité d'obtention de l'enchère			
+6 - Figer la simulation retenue --> SIMULATEUR_2
+7 - Utiliser SIMULATEUR_1 pour réaliser vos surenchères le jour j.										
+
+Les prix des marchés présentés se base sur les fichiers des valeurs foncières DVF produits par l'état.    
+Les scénarii présentés n'engagent pas le cabinet d'avocat et ne préjugent pas des prix effectifs au moment de l'enchère.    
+Ce fichier n'est qu'une aide à la décision. Le client reste libre de fixer son prix limite, le montant des frais, le montant des travaux.

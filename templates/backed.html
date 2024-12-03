@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block title %}Page des enregistrements sauvegardés{% endblock %}
+
+{% block content %}
+<div >
+    <h1>Enregistrements sauvegardés</h1>
+
+    <div style="overflow-x:auto;">
+
+        <table>
+            <tr>
+            
+                <th>Id</th>
+                <th>E-mail</th>
+                <th>Téléphone</th>
+                <th>Début de l'abonnement</th>
+                <th>Type d'abonnement</th>
+                <th>Fin de l'abonnement</th>
+                <th>Nombre de rapports téléchargés</th>
+                <th>Rapports téléchargés</th>
+            
+            </tr>
+
+
+            {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.phone }}</td>
+                <td>{{ user.subs_start.strftime('%d-%m-%Y') if user.subs_start  else 'Aucune date'}}</td>
+                <td>{{ user.subs_type if user.subs_type else 'Forfait gratuit' }} </td>
+                <td>{{ user.subscription_ends.strftime('%d-%m-%Y') if user.subscription_ends else 'Aucune date'}}</td>
+                <td>{{ user.reports_count if user.reports_count else 'Néant' }} </td>
+                <td>{{ user.downloaded_current if user.downloaded_current else 'Néant' }}</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="8">No users found.</td>
+            </tr>
+            {% endfor %}
+
+            
+            
+
+            
+            
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,235 @@
+{% extends "base.html" %}
+
+{% block title %}
+Vente Immobilière Judiciaire
+{% endblock %}
+
+{% block content %}
+
+<!-- <h1>Étapes d'une Vente Immobilière Judiciaire</h1> -->
+
+<div class="step-container">
+    <!-- Avant la vente -->
+    <div class="step">
+        <h2 onclick="toggleDetails('before')"><span class="toggle-icon">+</span> Avant la Vente</h2>
+        <div class="details" id="before">
+
+            <div class="highlight">
+                <h3>Consultation des annonces légales</h3> 
+                <p>Les ventes judiciaires sont publiées dans les journaux d’annonces légales, sur les sites des tribunaux et plateformes spécialisées.</p>
+            </div>
+
+            <div class="highlight">
+                <h3>Visite du bien</h3>
+                <p>Le bien est visitable avant la vente, sous la supervision d'un huissier ou d'un notaire. Crucial, car le bien est vendu "en l'état".</p>
+            </div>
+
+            
+            <div class="highlight">
+                <h3>Consultation du procès-verbal de description 
+                    <span class="tooltip">?
+                        <span class="tooltiptext"> Document consultable au greffe du tribunal ou au cabinet de l'avocat poursuivant</span>
+                    </span>
+                :</h3>
+                <p> Le procès-verbal détaillant l'état juridique du bien /
+                <span class="tooltip">?
+                    <span class="tooltiptext">
+                            <ol>
+                                <li>La description des lieux, leur composition et leur superficie ;</li>
+                                <li>L'indication des conditions d'occupation et l'identité des occupants ainsi que la mention des droits dont ils se prévalent ;</li>
+                                <li>Le cas échéant, le nom et l'adresse du syndic de copropriété ;</li>
+                                <li>Tous autres renseignements utiles sur l'immeuble fournis, notamment, par l'occupant.</li>
+                        </ol>
+                    </span>
+                </span>
+                .</p>
+            </div>
+
+            <div class="highlight">
+                <h3>Représentation par un avocat</h3>
+                <p>L’enchérisseur doit se munir d’un avocat (inscrit au barreau du tribunal où aura lieu la vente) et lui donner pouvoir de porter enchères.</p>
+            </div>
+            <div class="highlight">
+                <h3>Constitution du dossier :
+                    <span class="tooltip">?
+                        <span class="tooltiptext"> Avec l'aide de votre avocat.</span>
+                    </span>
+                </h3> 
+                <p>
+                    <ul>
+                        <li>rédaction du mandat de l'avocat pour vous représenter lors de la vente,</li>
+                        <li>dépôt d'un chèque de banque de 10 % de la mise à prix (avec un minimum de 3000€) pour consigne,
+                            <span class="tooltip">?
+                                <span class="tooltiptext"> restitué à l'issue de l'audience si vous ne remportez pas l'enchère</span>
+                            </span>
+                        </li>
+                        <li>dépôt d'un second chèque de banque, destiné à couvrir le montant des frais préalables (cf. cahier des conditions de vente),
+                            <span class="tooltip">?
+                                <span class="tooltiptext"> restitué à l'issue de l'audience si vous ne remportez pas l'enchère</span>
+                            </span>
+                        ,
+                        </li>
+                        <li>apport des pièces justificatives : identité, preuve de solvabilité...
+                            <span class="tooltip">?
+                                <span class="tooltiptext"> une copie d'un relevé de compte récent ou tout document prouvant que vous 
+                                    avez les fonds nécessaires, ou une offre de prêt valide d'une banque ou d'un établissement de crédit,
+                                    d'un montant suffisant pour couvrir le prix d'adjudication ainsi que tous les frais et droits associés
+                                </span>
+                            </span>
+                        .</li>
+                    </ul>
+                </p>
+        </div>
+        </div>
+    </div>
+
+    <!-- Pendant la vente -->
+    <div class="step">
+        <h2 onclick="toggleDetails('during')"><span class="toggle-icon">+</span> Pendant la Vente</h2>
+        <div class="details" id="during">
+            
+            <div class="highlight">
+                <h3>L'audience d’adjudication :</h3>
+                <p>La vente se déroule dans la salle des ventes du tribunal judiciaire.
+                    Le juge ouvre l'audience et rappelle les détails de la vente, incluant l'adresse de l'immeuble,
+                    son numéro de vente et, le montant de la mise à prix fixé par le créancier poursuivant.
+                </p>
+            </div>
+
+            
+            <div class="highlight">
+                <h3>Déroulement des enchères :</h3>
+                <p>Les avocats enchérissent pour leurs clients. Chaque enchère est ferme et irrévocable. Le juge déclare l’adjudication après 90 secondes sans nouvelles enchères.</p>
+            </div>
+
+            <div class="highlight">
+                <h3>Désignation de l’adjudicataire :</h3>
+                <p>L’avocat de la plus haute enchère représente l’adjudicataire, le nouveau propriétaire du bien.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Après la vente -->
+    <div class="step">
+        <h2 onclick="toggleDetails('after')"><span class="toggle-icon">+</span> Après la Vente</h2>
+        <div class="details" id="after">
+
+            <div class="highlight">
+                <h3>Versement du prix :</h3>
+                <p>L’adjudicataire a 2 mois (à compter de la date d'adjudication définitive) pour verser le prix de vente(auprès de la Caisse des dépôts et consignations), par l'intermédiaire de l’avocat.</p>
+            </div>
+
+            <div class="highlight">
+                <h3>Paiement des frais supplémentaires :</h3>
+                <p>Les frais préalables et droits de mutation sont à la charge de l’adjudicataire.</p>
+            </div>
+
+            <div class="highlight">
+                <h3>Jugement d’adjudication :</h3>
+                <p>Ce jugement confère la propriété du bien, avec un délai de 10 jours pour surenchérir de 10% au minimum.</p>
+            </div>
+
+            <div class="highlight">
+                <h3>Prise de possession :</h3>
+                <p>L’adjudicataire prend possession après le paiement complet et l'expiration du délai de surenchère.</p>
+            </div>
+
+            <div class="highlight">
+                <h3>Purge des hypothèques :</h3>
+                <p>Le bien est acquis libre de toutes charges, sauf mention dans le cahier des charges.</p>
+            </div>
+
+            </div>
+    </div>
+</div>
+
+<div class="step">
+    <h2 onclick="toggleDetails('liens')"><span class="toggle-icon">+</span> Liens légifrance</h2>
+        <div class="details" id="liens">
+            <ul>
+                <li>
+                    <a 
+                        href="https://www.legifrance.gouv.fr/codes/section_lc/LEGITEXT000025024948/LEGISCTA000025939111/#LEGISCTA000025939111"
+                        target="_blank">La vente de l'immeuble saisi (Articles R322-1 à R322-72)
+                    </a>
+                </li>
+                <li>
+                    <a 
+                        href="https://www.legifrance.gouv.fr/codes/section_lc/LEGITEXT000006069565/LEGISCTA000032808862/"
+                        target="_blank">Dispositions particulières à la vente par adjudication d'un bien immobilier (Articles R742-27 à R742-41)
+                    </a>
+                </li>
+                <li>
+                    <a 
+                        href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000025939072"
+                        target="_blank">Le dépôt au greffe du cahier des conditions de vente et de l'état hypothécaire (Articles R322-10 à R322-11)
+                    </a>
+                </li>
+                <li>
+                    <a 
+                        href="https://www.legifrance.gouv.fr/codes/section_lc/LEGITEXT000025024948/LEGISCTA000025939200/"
+                        target="_blank">Le jugement d'adjudication et le titre de vente (Articles R322-59 à R322-63)
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!-- Informations supplémentaires -->
+
+<!--  
+<div class="additional-info">
+    <h2>Les organismes intervenant :</h2>
+    <ul>
+        <li><strong>Tribunal judiciaire :</strong> Supervise la vente et prononce l’adjudication.</li>
+        <li><strong>Avocat :</strong> Obligatoire pour représenter l’enchérisseur.</li>
+        <li><strong>Caisse des dépôts et consignations :</strong> Séquestre pour recevoir les fonds de l’adjudication.</li>
+        <li><strong>Notaire :</strong> Peut gérer les formalités préalables et la publication.</li>
+        <li><strong>Huissier de justice :</strong> Organise les visites et la remise des clés.</li>
+    </ul>
+</div>
+ -->
+
+
+<!-- 
+<div class="summary">
+    <h2>Résumé des délais :</h2>
+    <ul>
+        <li><strong>2 mois :</strong> Pour payer l’intégralité du prix d’adjudication.</li>
+        <li><strong>10 jours :</strong> Délai de surenchère après la vente.</li>
+        <li><strong>90 secondes :</strong> Entre deux enchères pendant la vente.</li>
+    </ul>
+</div>
+ -->
+
+
+<!-- <script>
+        function toggleDetails(id) {
+            var details = document.getElementById(id);
+            if (details.classList.contains('active')) {
+                details.classList.remove('active');
+            } else {
+                var allDetails = document.querySelectorAll('.details');
+                allDetails.forEach(function(detail) {
+                    detail.classList.remove('active');
+                });
+                details.classList.add('active');
+            }
+        }
+
+</script> -->
+<script>
+    function toggleDetails(id) {
+        var details = document.getElementById(id);
+        var icon = details.previousElementSibling.querySelector('.toggle-icon');
+        if (details.style.display === "none" || details.style.display === "") {
+            details.style.display = "block";
+            icon.textContent = "-";
+        } else {
+            details.style.display = "none";
+            icon.textContent = "+";
+        }
+    }
+</script>
+
+{% endblock %}

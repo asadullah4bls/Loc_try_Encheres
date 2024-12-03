@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}My App{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <!-- <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script> -->
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js' crossorigin='anonymous'></script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+</head>
+
+<body>
+
+    <!-- Header and Navigation -->
+    <header>
+        <div class="navbar">
+            <a href="{{ url_for('index') }}" class="nav_item {% if request.endpoint == 'index' %}active{% endif %}">Accueil</a>
+            <a href="{{ url_for('outil') }}" class="nav_item {% if request.endpoint == 'outil' %}active{% endif %}">Découvrir notre outil</a>
+            <a href="{{ url_for('pricing') }}" class="nav_item {% if request.endpoint == 'pricing' %}active{% endif %}">Politique de prix</a>
+            <a href="{{ url_for('frais') }}" class="nav_item {% if request.endpoint == 'frais' %}active{% endif %}">Simulation des frais</a>
+            <a href="{{ url_for('preparer') }}" class="nav_item {% if request.endpoint == 'preparer' %}active{% endif %}">Générer vos rapports</a>
+            {% if current_user.is_superuser%}
+                <a href="{{ url_for('backed') }}" class="nav_item {% if request.endpoint == 'backed' %}active{% endif %}">Sauvegardée</a>
+            {% endif %}
+
+            <!-- Se connecter with dropdown -->
+            <div style = " padding-left:5px; padding-right:5px; "class="dropdown">
+                <div id="dropdown-toggle">
+                    
+                    <i class="fas fa-user-circle" style="font-size:30px ; color: {% if is_authenticated %}#04AA6D{% else %}gray{% endif %};"></i>
+                    
+                </div>
+                <div class="dropdown-content" id="dropdown-content" style="display: none;"> <!-- Added ID and display style -->
+                    {% if is_authenticated %}
+                        <a href="{{ url_for('logout') }}">Se déconnecter</a>
+                        <a href="{{ url_for('profile') }}">Profile</a>
+                        <a href="{{ url_for('reinitialisation') }}">Réinitialiser</a>
+                    {% else %}
+                        <a href="{{ url_for('connexion') }}">Se connecter</a>
+                        <a href="{{ url_for('inscription') }}">S'inscrire</a>
+                        <a href="{{ url_for('reinitialisation') }}">Réinitialiser</a>
+                    {% endif %}
+
+                </div>
+            </div>
+
+            <a href="{{ url_for('contact') }}" class="nav_item {% if request.endpoint == 'contact' %}active{% endif %}">Contact</a>
+        </div>
+    </header>
+
+
+
+    <!-- Main Content -->
+    <main class= full-width-container>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="alert-container">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+
+        {% block content %}
+        {% endblock %}
+
+        <!-- Cookie Consent Banner -->
+        <div id="cookie-consent-banner" style="display: none;">
+            <p>This site uses cookies to enhance your experience. By continuing to visit this site, you agree to our use of cookies.</p>
+            <button id="accept-cookies">Accept</button>
+        </div>
+
+
+    </main>
+
+    {% block footer %}
+        <footer>
+            <div class="info">
+                <h2>Informations de contact</h2>
+                <p>Email : support@monentreprise.com</p>
+                <p>Téléphone : +33 1 23 45 67 89</p>
+                <p>Adresse : 123 Rue de l'Entreprise, 75000 Paris, France</p>
+            </div>
+        </footer>
+    {% endblock %}
+
+</body>
+
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const banner = document.getElementById('cookie-consent-banner');
+        const acceptButton = document.getElementById('accept-cookies');
+
+        // Check if cookies have been accepted
+        if (!localStorage.getItem('cookiesAccepted')) {
+            banner.style.display = 'block';
+        }
+
+        acceptButton.addEventListener('click', function() {
+            localStorage.setItem('cookiesAccepted', 'true');
+            banner.style.display = 'none';
+        });
+    });
+
+
+//     document.addEventListener('DOMContentLoaded', function() {
+//     const userIcon = document.getElementById('user-icon');
+
+//     // Simulate user authentication status (replace this with real check)
+//     // const isAuthenticated = "{{ 'true' if current_user.is_authenticated else 'false' }}" === 'true';
+//     const isAuthenticated = "{{ is_authenticated | tojson }}";
+//     // Change icon color based on authentication status
+//     if (isAuthenticated) {
+//         userIcon.style.color = 'green';
+//     } else {
+//         userIcon.style.color = 'white';
+//     }
+// });
+
+document.getElementById('dropdown-toggle').addEventListener('click', function(event) {
+    event.preventDefault();
+    const dropdownContent = document.getElementById('dropdown-content');
+    dropdownContent.style.display = dropdownContent.style.display === 'none' ? 'block' : 'none';
+});
+
+
+
+</script>
+
+</html>
