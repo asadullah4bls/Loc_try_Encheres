@@ -1,12 +1,4 @@
 from flask import Flask
-
-app = Flask(__name__)
-
-@app.route('/')
-def hello_world():
-    return 'Hello, World!'
-
-
 # from . import Data_generator as dg
 # # from src import Data_generator as dg
 # from . import Report_generator as rg
@@ -236,7 +228,15 @@ def hello_world():
 #     "#eeeeee",
 # ]
 # cities = dg.get_cities()
- 
+def create_app():
+    app = Flask(__name__, static_folder="../static", template_folder="../templates")
+
+    @app.route('/')
+    def hello_world():
+        return 'Hello, World omg this one!'
+    
+
+    return app
 # csrf = CSRFProtect(app)  # Enable CSRF protection globally
 # # app.secret_key = os.getenv("SECRET_KEY", os.urandom(24))
 # # app.secret_key = os.getenv("SECRET_KEY", secrets.token_hex(24))
@@ -1854,7 +1854,7 @@ def hello_world():
 
 
 if __name__ == "__main__":
-    #app = create_app()
+    app = create_app()
 
 #     # Database configuration
 
