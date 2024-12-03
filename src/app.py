@@ -16,9 +16,9 @@ from dotenv import load_dotenv
 from pathlib import Path
 from google.cloud import storage
 import  stripe
-import  time
-import  threading
-from  schedule   import   Scheduler
+# import  time
+# import  threading
+# from  schedule   import   Scheduler
 
 from flask import (
     Flask,
@@ -109,69 +109,69 @@ MAIL_DEFAULT_SENDER = os.getenv(
 app.config["MAIL_DEFAULT_SENDER"] = os.getenv("MAIL_DEFAULT_SENDER")
 mail = Mail(app)
 # Define the function to be scheduled
-def give_admin_gold():
-    with app.app_context():  # Ensure Flask application context
-        print("Scheduled function executed at", datetime.now())
-        current_time = datetime.now()
-        if  db.session.query(db_models.User.query.filter(db_models.User.subscription_ends<current_time).filter(db_models.User.is_subscribed.is_(True)).filter(db_models.User.subscription_ends.isnot(None)).exists()).scalar():
-            print("subs exp users exist") 
-            all_users = User.query.filter(User.subscription_ends < current_time,User.is_subscribed.is_(True),User.subscription_ends.isnot(None)).all()
-            for  user in all_users:
-                user.is_subscribed = False
-                user.reports_count = 0
-                db.session.commit()
+# def give_admin_gold():
+#     with app.app_context():  # Ensure Flask application context
+#         print("Scheduled function executed at", datetime.now())
+#         current_time = datetime.now()
+#         if  db.session.query(db_models.User.query.filter(db_models.User.subscription_ends<current_time).filter(db_models.User.is_subscribed.is_(True)).filter(db_models.User.subscription_ends.isnot(None)).exists()).scalar():
+#             print("subs exp users exist") 
+#             all_users = User.query.filter(User.subscription_ends < current_time,User.is_subscribed.is_(True),User.subscription_ends.isnot(None)).all()
+#             for  user in all_users:
+#                 user.is_subscribed = False
+#                 user.reports_count = 0
+#                 db.session.commit()
 
-            for  user in all_users:
-                context_data = {'codevar': "subscription ended",'link': f"We hope this message finds you well. We wanted to inform you that your subscription ended.",'flag_password_reset': False,'flag_confirm_email':"121"}
+#             for  user in all_users:
+#                 context_data = {'codevar': "subscription ended",'link': f"We hope this message finds you well. We wanted to inform you that your subscription ended.",'flag_password_reset': False,'flag_confirm_email':"121"}
 
-                #html_message = render_template('confrim_email.html', **context_data) 
-                # msg = Message(
-                #     subject= "Fin de l'abonnement",
-                #     sender=os.getenv("EMAIL_SENDER"),
-                #     recipients=[user.email], 
-                #     html=html_message
-                # ) 
-                msg = Message(
-                    "Fin de l'abonnement",
-                    sender=os.getenv(
-                        "EMAIL_SENDER"
-                    ),  # Use environment variable for sender email
-                    recipients=[user.email],
-                    body=f"Nous espérons que ce message vous parvient bien. Nous tenions à vous informer que votre abonnement est terminé.",
-                )
-                try:
-                    mail.send(msg)
-                except Exception as e:
-                    logging.error(f"subs end Failed to send email to {user.email}: {e}")
+#                 #html_message = render_template('confrim_email.html', **context_data) 
+#                 # msg = Message(
+#                 #     subject= "Fin de l'abonnement",
+#                 #     sender=os.getenv("EMAIL_SENDER"),
+#                 #     recipients=[user.email], 
+#                 #     html=html_message
+#                 # ) 
+#                 msg = Message(
+#                     "Fin de l'abonnement",
+#                     sender=os.getenv(
+#                         "EMAIL_SENDER"
+#                     ),  # Use environment variable for sender email
+#                     recipients=[user.email],
+#                     body=f"Nous espérons que ce message vous parvient bien. Nous tenions à vous informer que votre abonnement est terminé.",
+#                 )
+#                 try:
+#                     mail.send(msg)
+#                 except Exception as e:
+#                     logging.error(f"subs end Failed to send email to {user.email}: {e}")
 
-        else:
-            print("subs exp users not exist")
+#         else:
+#             print("subs exp users not exist")
 
-def run_continuously(interval=1):
-    """ Continuously run, while executing pending jobs at each elapsed time interval. """
-    cease_continuous_run = threading.Event()
+# def run_continuously(interval=1):
+#     """ Continuously run, while executing pending jobs at each elapsed time interval. """
+#     cease_continuous_run = threading.Event()
 
-    class ScheduleThread(threading.Thread):
-        @classmethod
-        def run(cls):
-            while not cease_continuous_run.is_set():
-                scheduler.run_pending()
-                time.sleep(interval)
+#     class ScheduleThread(threading.Thread):
+#         @classmethod
+#         def run(cls):
+#             while not cease_continuous_run.is_set():
+#                 scheduler.run_pending()
+#                 time.sleep(interval)
 
-    continuous_thread = ScheduleThread()
-    continuous_thread.setDaemon(True)
-    continuous_thread.start()
-    return cease_continuous_run
-
-
-scheduler = Scheduler()
+#     continuous_thread = ScheduleThread()
+#     continuous_thread.setDaemon(True)
+#     continuous_thread.start()
+#     return cease_continuous_run
 
 
-# Add a job to the scheduler
-scheduler.every(2).minutes.do(give_admin_gold)
+# scheduler = Scheduler()
 
-# Start the scheduler in a separate thread
-run_continuously()
+
+# # Add a job to the scheduler
+# scheduler.every(2).minutes.do(give_admin_gold)
+
+# # Start the scheduler in a separate thread
+# run_continuously()
 # os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = os.getenv(
 #     "GOOGLE_APPLICATION_CREDENTIALS"
 # )
