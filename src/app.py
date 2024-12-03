@@ -1,10 +1,17 @@
 from flask import Flask
+from flask import (
+    render_template
+)
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder="../static", template_folder="../templates")
 
 @app.route('/')
 def hello_world():
     return 'Hello, World! amazzzz ?'
+
+@app.route("/indx") 
+def index():
+    return render_template("index.html")
 
 
 # from . import Data_generator as dg
