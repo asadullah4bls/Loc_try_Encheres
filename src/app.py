@@ -645,6 +645,8 @@ def preparer():
         # analytics = analytics.replace(0, None)
 
         if analytics.empty:
+            flash(f"{criteria['type_local']} non disponible pour {criteria['commune']}.","error")
+            return redirect(url_for('preparer'))
             # flash(f"{criteria['type_local']} non disponible pour {criteria['commune']}.","error")
             # return redirect(url_for('preparer'))
             #return redirect(url_for('preparer',no_report=f"{criteria['type_local']} non disponible pour {criteria['commune']}."))
@@ -784,6 +786,9 @@ def preparer():
         db.session.add(report_log_instance)
         db.session.commit()
 
+        flash(f"Télécharger le rapport {report_name}.","info")
+        return redirect(url_for('preparer'))
+
         return jsonify(
             {
                 "message": f"Télécharger le rapport {report_name}.",
@@ -801,7 +806,7 @@ def preparer():
     #     flash(no_report,"error")
     # print("preparer cities",cities)
     return render_template(
-        "preparer.html", cities=cities, report_available=False, user=current_user,form=form,
+        "preparerc.html", cities=cities, report_available=False, user=current_user,form=form,
         rep_count=rep_count
     )
     
@@ -1425,7 +1430,7 @@ def connexion():
                 if  db.session.query(db_models.User.query.filter(db_models.User.id==current_user.id).filter(db_models.User.reports_count==0).exists()).scalar():
                     rep_count = True
                 return render_template(
-                    "preparer.html",
+                    "preparerc.html",
                     cities=cities,
                     # success_message="Connexion réussie.",
                     user=current_user,
