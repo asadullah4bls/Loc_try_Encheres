@@ -155,8 +155,16 @@ def get_distributions_decotes(criteria):
 @log_execution_time
 def get_scoring_voies(criteria):
     url = build_url(base_url=base_url, endpoint="get_scoring_voies", criteria=criteria)
+    #print("the m url",url)
     scoring_voies = get_stats(url)
+    # print("df start",scoring_voies)
     scoring_voies = scoring_voies.iloc[:, 1:].fillna(0)
+    # print("df after",scoring_voies)
+    # Define the CSV file path
+    # csv_file_path = os.path.join(REPORTS_DIR, 'data_report.csv')
+
+    # Save DataFrame to CSV
+    # scoring_voies.to_csv(csv_file_path, index=False)
     return scoring_voies
 
 

@@ -16,7 +16,7 @@ from dotenv import load_dotenv
 from pathlib import Path
 from google.cloud import storage
 import  stripe
- 
+import  pandas  as  pd
 
 
 
@@ -84,6 +84,8 @@ stripe.api_key = os.getenv("STRIPE_API_KEY")
 BASE_DIR = Path(__file__).parent.parent
 
 REPORTS_DIR = f"{BASE_DIR}/{REPORT_DIR}"
+the_fl_var = "static/css/payment/data_report.csv"
+CS_FL_DIR = f"{BASE_DIR}/{the_fl_var}"
 
 db = db_models.db
 User = db_models.User
@@ -608,6 +610,7 @@ def preparer():
         type_bien = request.form["property_type"]
 
         criteria = dict(commune=selected_city, type_local=type_bien)
+        print("critera dd",criteria)
 
         year = dg.get_annee_max()["data"][0]["Annee"] + 1
         report_name = f"{criteria['commune']}_{criteria['type_local']}_{year}"
@@ -681,6 +684,7 @@ def preparer():
         prix_marche = int(prix_m2 * surface)
         analytics.prix_m2_c = analytics.prix_m2_c.astype(int)
 
+
         # report = rg.REPORT_BUILDER(
         try:
             rg.REPORT_BUILDER(
@@ -703,14 +707,34 @@ def preparer():
                 criteria=criteria,
             )
         except:
-            return jsonify(
-                {
-                    "message": f"{criteria['type_local']} non disponible pour {criteria['commune']}.",
-                    "message_class": "error",
-                    "report_available": False,
-                    "reports_count_flag ":"true",
-                }
+            new_df = pd.read_csv(CS_FL_DIR)
+            rg.REPORT_BUILDER(
+                report_name=report_name,
+                df_stats=analytics[["annee", "prix_m2_c50", "Volume_c"]],
+                df_volumes_pieces=historique_volumes_pieces,
+                df_prix_m2_pieces=historique_prix_m2_pieces,
+                df_volumes_surfaces=historique_volumes_surfaces,
+                df_distributions_decotes=distributions_decotes,
+                df_scoring=new_df,
+                # user_logo=current_user.logo,
+                # user_website=current_user.website,
+                color_palette=color_palette,
+                prix_marche=prix_marche,
+                taux_frais=0.15,
+                taux_travaux=0.1,
+                bbg_color="#73a1b2",
+                info_font_color="#9da19e",
+                selection_color="#d99795",
+                criteria=criteria,
             )
+            # return jsonify(
+            #     {
+            #         "message": f"{criteria['type_local']} non disponible pour {criteria['commune']}.",
+            #         "message_class": "error",
+            #         "report_available": False,
+            #         "reports_count_flag ":"true",
+            #     }
+            # )
 
         # report_path = os.path.join(BASE_DIR, '..', report_path)
         # report_path = os.path.join(REPORTS_DIR, report_name)

@@ -507,7 +507,7 @@ ul li {
   }
 
   .columns_wrap {
-    display:ruby-text
+    display:flex;
   }
   
   .columns {
