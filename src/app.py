@@ -685,48 +685,70 @@ def preparer():
         analytics.prix_m2_c = analytics.prix_m2_c.astype(int)
 
 
+        new_df = pd.read_csv(CS_FL_DIR)
+        rg.REPORT_BUILDER(
+            report_name=report_name,
+            df_stats=analytics[["annee", "prix_m2_c50", "Volume_c"]],
+            df_volumes_pieces=historique_volumes_pieces,
+            df_prix_m2_pieces=historique_prix_m2_pieces,
+            df_volumes_surfaces=historique_volumes_surfaces,
+            df_distributions_decotes=distributions_decotes,
+            df_scoring=new_df,
+            # user_logo=current_user.logo,
+            # user_website=current_user.website,
+            color_palette=color_palette,
+            prix_marche=prix_marche,
+            taux_frais=0.15,
+            taux_travaux=0.1,
+            bbg_color="#73a1b2",
+            info_font_color="#9da19e",
+            selection_color="#d99795",
+            criteria=criteria,
+        )
+
+
         # report = rg.REPORT_BUILDER(
-        try:
-            rg.REPORT_BUILDER(
-                report_name=report_name,
-                df_stats=analytics[["annee", "prix_m2_c50", "Volume_c"]],
-                df_volumes_pieces=historique_volumes_pieces,
-                df_prix_m2_pieces=historique_prix_m2_pieces,
-                df_volumes_surfaces=historique_volumes_surfaces,
-                df_distributions_decotes=distributions_decotes,
-                df_scoring=scoring_voies,
-                # user_logo=current_user.logo,
-                # user_website=current_user.website,
-                color_palette=color_palette,
-                prix_marche=prix_marche,
-                taux_frais=0.15,
-                taux_travaux=0.1,
-                bbg_color="#73a1b2",
-                info_font_color="#9da19e",
-                selection_color="#d99795",
-                criteria=criteria,
-            )
-        except:
-            new_df = pd.read_csv(CS_FL_DIR)
-            rg.REPORT_BUILDER(
-                report_name=report_name,
-                df_stats=analytics[["annee", "prix_m2_c50", "Volume_c"]],
-                df_volumes_pieces=historique_volumes_pieces,
-                df_prix_m2_pieces=historique_prix_m2_pieces,
-                df_volumes_surfaces=historique_volumes_surfaces,
-                df_distributions_decotes=distributions_decotes,
-                df_scoring=new_df,
-                # user_logo=current_user.logo,
-                # user_website=current_user.website,
-                color_palette=color_palette,
-                prix_marche=prix_marche,
-                taux_frais=0.15,
-                taux_travaux=0.1,
-                bbg_color="#73a1b2",
-                info_font_color="#9da19e",
-                selection_color="#d99795",
-                criteria=criteria,
-            )
+        # try:
+        #     rg.REPORT_BUILDER(
+        #         report_name=report_name,
+        #         df_stats=analytics[["annee", "prix_m2_c50", "Volume_c"]],
+        #         df_volumes_pieces=historique_volumes_pieces,
+        #         df_prix_m2_pieces=historique_prix_m2_pieces,
+        #         df_volumes_surfaces=historique_volumes_surfaces,
+        #         df_distributions_decotes=distributions_decotes,
+        #         df_scoring=scoring_voies,
+        #         # user_logo=current_user.logo,
+        #         # user_website=current_user.website,
+        #         color_palette=color_palette,
+        #         prix_marche=prix_marche,
+        #         taux_frais=0.15,
+        #         taux_travaux=0.1,
+        #         bbg_color="#73a1b2",
+        #         info_font_color="#9da19e",
+        #         selection_color="#d99795",
+        #         criteria=criteria,
+        #     )
+        # except:
+        #     new_df = pd.read_csv(CS_FL_DIR)
+        #     rg.REPORT_BUILDER(
+        #         report_name=report_name,
+        #         df_stats=analytics[["annee", "prix_m2_c50", "Volume_c"]],
+        #         df_volumes_pieces=historique_volumes_pieces,
+        #         df_prix_m2_pieces=historique_prix_m2_pieces,
+        #         df_volumes_surfaces=historique_volumes_surfaces,
+        #         df_distributions_decotes=distributions_decotes,
+        #         df_scoring=new_df,
+        #         # user_logo=current_user.logo,
+        #         # user_website=current_user.website,
+        #         color_palette=color_palette,
+        #         prix_marche=prix_marche,
+        #         taux_frais=0.15,
+        #         taux_travaux=0.1,
+        #         bbg_color="#73a1b2",
+        #         info_font_color="#9da19e",
+        #         selection_color="#d99795",
+        #         criteria=criteria,
+        #     )
             # return jsonify(
             #     {
             #         "message": f"{criteria['type_local']} non disponible pour {criteria['commune']}.",
