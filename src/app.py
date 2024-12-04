@@ -645,6 +645,7 @@ def preparer():
         # analytics = analytics.replace(0, None)
 
         if analytics.empty:
+            return redirect(request.referrer)
             flash(f"{criteria['type_local']} non disponible pour {criteria['commune']}.","error")
             return redirect(url_for('preparer'))
             # flash(f"{criteria['type_local']} non disponible pour {criteria['commune']}.","error")
@@ -786,7 +787,9 @@ def preparer():
         db.session.add(report_log_instance)
         db.session.commit()
 
-        flash(f"Télécharger le rapport {report_name}.","info")
+        return redirect(request.referrer)
+
+        #flash(f"Télécharger le rapport {report_name}.","info")
         return redirect(url_for('preparer'))
 
         return jsonify(
