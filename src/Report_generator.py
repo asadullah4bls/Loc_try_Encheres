@@ -1863,7 +1863,13 @@ class REPORT_BUILDER:
         # Create a line chart object for 'prix_au_m2'.
         col_name = {i - 96: chr(i).upper() for i in range(ord("a"), ord("z") + 1)}
         # prev_position = ''
-        validation_list = df.iloc[:, 0].to_list()
+        valid_val = False
+        try:
+            validation_list = df.iloc[:, 0].to_list()
+            valid_val = True
+        except:
+            pass
+
         if sheet_name == "VOLUMES_PIECES" or sheet_name == "VOLUMES_SURFACES":
             chart = self.workbook.add_chart(
                 {"type": "column", "subtype": "percent_stacked"}
@@ -1919,12 +1925,15 @@ class REPORT_BUILDER:
         # self.color_palette
 
         elif sheet_name == "PRIX_PIECES":
-            worksheet.data_validation(
-                "B17", {"validate": "list", "source": validation_list[:-1]}
-            )
-            worksheet.data_validation(
-                "B18", {"validate": "list", "source": validation_list[:-1]}
-            )
+            if  valid_val:
+                worksheet.data_validation(
+                    "B17", {"validate": "list", "source": validation_list[:-1]}
+                )
+                worksheet.data_validation(
+                    "B18", {"validate": "list", "source": validation_list[:-1]}
+                )
+             
+
 
             self.workbook.define_name(
                 "prix_q25",
