@@ -682,25 +682,35 @@ def preparer():
         analytics.prix_m2_c = analytics.prix_m2_c.astype(int)
 
         # report = rg.REPORT_BUILDER(
-        rg.REPORT_BUILDER(
-            report_name=report_name,
-            df_stats=analytics[["annee", "prix_m2_c50", "Volume_c"]],
-            df_volumes_pieces=historique_volumes_pieces,
-            df_prix_m2_pieces=historique_prix_m2_pieces,
-            df_volumes_surfaces=historique_volumes_surfaces,
-            df_distributions_decotes=distributions_decotes,
-            df_scoring=scoring_voies,
-            # user_logo=current_user.logo,
-            # user_website=current_user.website,
-            color_palette=color_palette,
-            prix_marche=prix_marche,
-            taux_frais=0.15,
-            taux_travaux=0.1,
-            bbg_color="#73a1b2",
-            info_font_color="#9da19e",
-            selection_color="#d99795",
-            criteria=criteria,
-        )
+        try:
+            rg.REPORT_BUILDER(
+                report_name=report_name,
+                df_stats=analytics[["annee", "prix_m2_c50", "Volume_c"]],
+                df_volumes_pieces=historique_volumes_pieces,
+                df_prix_m2_pieces=historique_prix_m2_pieces,
+                df_volumes_surfaces=historique_volumes_surfaces,
+                df_distributions_decotes=distributions_decotes,
+                df_scoring=scoring_voies,
+                # user_logo=current_user.logo,
+                # user_website=current_user.website,
+                color_palette=color_palette,
+                prix_marche=prix_marche,
+                taux_frais=0.15,
+                taux_travaux=0.1,
+                bbg_color="#73a1b2",
+                info_font_color="#9da19e",
+                selection_color="#d99795",
+                criteria=criteria,
+            )
+        except:
+            return jsonify(
+                {
+                    "message": f"{criteria['type_local']} non disponible pour {criteria['commune']}.",
+                    "message_class": "error",
+                    "report_available": False,
+                    "reports_count_flag ":"true",
+                }
+            )
 
         # report_path = os.path.join(BASE_DIR, '..', report_path)
         # report_path = os.path.join(REPORTS_DIR, report_name)
