@@ -2360,7 +2360,24 @@ class REPORT_BUILDER:
             worksheet.merge_range("H10:I10", validation_list[0], self.merge_format_neutral)
             print("valadation list first try success")
         except:
-            print("valadation list second try success")
+            print("valadation list second try start")
+            try:
+                validation_list = df.iloc[:, 0].to_list()
+                worksheet.data_validation(
+                    "H10", {"validate": "list", "source": f"B2:B{len(validation_list)+1}"}
+                )
+
+                worksheet.merge_range("H10:I10", validation_list[0], self.merge_format_neutral)
+                print("valadation list second try success")
+            except:
+                zns = 1
+                worksheet.data_validation(
+                    "H10", {"validate": "list", "source": f"B2:B{zns}"}
+                )
+
+                worksheet.merge_range("H10:I10", 1, self.merge_format_neutral)
+                print("valadation list end try success")
+
 
         
 
