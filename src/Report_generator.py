@@ -2312,7 +2312,12 @@ class REPORT_BUILDER:
             f"=OFFSET({sheet_name}!$D$1, 1, 0,COUNTA({sheet_name}!$A:$A) - 1, 1)",
         )
 
-        validation_list = df.iloc[:, 1].to_list()
+        try: 
+            validation_list = df.iloc[:, 1].to_list()
+            print("valadation list first try success")
+        except:
+            validation_list = df.iloc[:, 0].to_list()
+            print("valadation list second try success")
         # print(validation_list)
 
         # font_size = 20
