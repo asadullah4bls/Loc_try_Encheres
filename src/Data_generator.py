@@ -43,7 +43,7 @@ def build_url(base_url, endpoint, criteria=None):
 def get_stats(url):
     # print(url)
     data = requests.get(url)
-    # print(data.json())
+    print("data.json()",data.json())
     df = pd.json_normalize(data.json(), "data")
     return df
 
