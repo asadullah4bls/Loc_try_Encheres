@@ -1,8 +1,8 @@
-"""on k on
+"""als fas s
 
-Revision ID: 5a46c0a075f6
+Revision ID: 66781120f004
 Revises: 
-Create Date: 2024-11-29 22:50:02.262017
+Create Date: 2024-12-04 13:31:03.059510
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '5a46c0a075f6'
+revision = '66781120f004'
 down_revision = None
 branch_labels = None
 depends_on = None

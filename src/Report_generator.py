@@ -2311,8 +2311,7 @@ class REPORT_BUILDER:
             "scores",
             f"=OFFSET({sheet_name}!$D$1, 1, 0,COUNTA({sheet_name}!$A:$A) - 1, 1)",
         )
-
-        validation_list = df.iloc[:, 1].to_list()
+        
         # print(validation_list)
 
         # font_size = 20
@@ -2351,11 +2350,19 @@ class REPORT_BUILDER:
         )
         # worksheet.merge_range("H9:I9", "Sélectionner une voie", self.merge_format)
 
-        worksheet.data_validation(
-            "H10", {"validate": "list", "source": f"B2:B{len(validation_list)+1}"}
-        )
+        print("df.shape",df.shape)
+        try: 
+            validation_list = df.iloc[:, 1].to_list()
+            worksheet.data_validation(
+                "H10", {"validate": "list", "source": f"B2:B{len(validation_list)+1}"}
+            )
 
-        worksheet.merge_range("H10:I10", validation_list[0], self.merge_format_neutral)
+            worksheet.merge_range("H10:I10", validation_list[0], self.merge_format_neutral)
+            print("valadation list first try success")
+        except:
+            print("valadation list second try success")
+
+        
 
         # worksheet.write("H12", "Score", self.merge_format)
         worksheet = add_title(
