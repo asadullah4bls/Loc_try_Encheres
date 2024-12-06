@@ -1943,4 +1943,4 @@ if __name__ == "__main__":
 
     # # mail = Mail(app)
 
-    app.run(host='192.168.18.85', port=8007,debug=True)
+    app.run()
