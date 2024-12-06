@@ -374,6 +374,8 @@ def confirm_token_expire(token, salt="password-reset-salt", expiration=180):
 @app.route("/")
 @log_execution_time
 def index():
+    if  current_user.is_authenticated:
+        print("curen addr",current_user.address)
     return render_template("index.html")
 
 @app.route("/code_form")
@@ -679,20 +681,54 @@ def preparer():
         )
         # historique_prix_m2_pieces = historique_prix_m2_pieces.replace(0, None)
 
-        #scoring_voies = dg.get_scoring_voies(criteria)
+        scoring_voies = dg.get_scoring_voies(criteria)
         distributions_decotes = dg.get_distributions_decotes(criteria)
 
         surface = analytics.iloc[[-1]].surface.values[0]
         prix_m2 = analytics.iloc[[-1]].prix_m2_c.values[0]
         prix_marche = int(prix_m2 * surface)
         analytics.prix_m2_c = analytics.prix_m2_c.astype(int)
+        # try:
+
+        #     data = {'schema': {'fields': [{'name': 'annee', 'type': 'integer', 'extDtype': 'Int64'}, {'name': 'Commune', 'type': 'string'}, {'name': 'Type_local', 'type': 'string'}, {'name': 'prix_m2_c25', 'type': 'integer', 'extDtype': 'Int64'}, {'name': 'prix_m2_c50', 'type': 'integer', 'extDtype': 'Int64'}, {'name': 'prix_m2_c', 'type': 'integer', 'extDtype': 'Int64'}, {'name': 'prix_m2_c75', 'type': 'integer', 'extDtype': 'Int64'}, {'name': 'surface', 'type': 'integer', 'extDtype': 'Int64'}, {'name': 'Volume_c', 'type': 'integer', 'extDtype': 'Int64'}], 'primaryKey': ['annee'], 'pandas_version': '1.4.0'}, 'data': [{'annee': 2014, 'Commune': 'ABLEIGES', 'Type_local': 'Maison', 'prix_m2_c25': 1422, 'prix_m2_c50': 1688, 'prix_m2_c': 1767, 'prix_m2_c75': 2150, 'surface': 110, 'Volume_c': 15}, {'annee': 2015, 'Commune': 'ABLEIGES', 'Type_local': 'Maison', 'prix_m2_c25': 1506, 'prix_m2_c50': 1982, 'prix_m2_c': 1882, 'prix_m2_c75': 2277, 'surface': 126, 'Volume_c': 15}, {'annee': 2016, 'Commune': 'ABLEIGES', 'Type_local': 'Maison', 'prix_m2_c25': 1908, 'prix_m2_c50': 2328, 'prix_m2_c': 2197, 'prix_m2_c75': 2372, 'surface': 112, 'Volume_c': 9}, {'annee': 2017, 'Commune': 'ABLEIGES', 'Type_local': 'Maison', 'prix_m2_c25': 1510, 'prix_m2_c50': 2465, 'prix_m2_c': 2550, 'prix_m2_c75': 3168, 'surface': 104, 'Volume_c': 20}, {'annee': 2018, 'Commune': 'ABLEIGES', 'Type_local': 'Maison', 'prix_m2_c25': 1278, 'prix_m2_c50': 1750, 'prix_m2_c': 1895, 'prix_m2_c75': 2550, 'surface': 113, 'Volume_c': 11}, {'annee': 2019, 'Commune': 'ABLEIGES', 'Type_local': 'Maison', 'prix_m2_c25': 2472, 'prix_m2_c50': 3855, 'prix_m2_c': 3250, 'prix_m2_c75': 3999, 'surface': 83, 'Volume_c': 5}, {'annee': 2020, 'Commune': 'ABLEIGES', 'Type_local': 'Maison', 'prix_m2_c25': 1275, 'prix_m2_c50': 2669, 'prix_m2_c': 2554, 'prix_m2_c75': 3000, 'surface': 129, 'Volume_c': 17}, {'annee': 2021, 'Commune': 'ABLEIGES', 'Type_local': 'Maison', 'prix_m2_c25': 2500, 'prix_m2_c50': 2906, 'prix_m2_c': 2910, 'prix_m2_c75': 3549, 'surface': 94, 'Volume_c': 25}, {'annee': 2022, 'Commune': 'ABLEIGES', 'Type_local': 'Maison', 'prix_m2_c25': 2711, 'prix_m2_c50': 3045, 'prix_m2_c': 3131, 'prix_m2_c75': 3465, 'surface': 97, 'Volume_c': 20}, {'annee': 2023, 'Commune': 'ABLEIGES', 'Type_local': 'Maison', 'prix_m2_c25': 2559, 'prix_m2_c50': 3068, 'prix_m2_c': 3671, 'prix_m2_c75': 3720, 'surface': 94, 'Volume_c': 19}]}
+
+        #     defn = pd.json_normalize(data, "data")
+        #     samzn = defn.iloc[:, 1:].fillna(0)
+        #     #new_df = pd.read_csv(CS_FL_DIR)
+        #     rg.REPORT_BUILDER(
+        #         report_name=report_name,
+        #         df_stats=analytics[["annee", "prix_m2_c50", "Volume_c"]],
+        #         df_volumes_pieces=historique_volumes_pieces,
+        #         df_prix_m2_pieces=historique_prix_m2_pieces,
+        #         df_volumes_surfaces=historique_volumes_surfaces,
+        #         df_distributions_decotes=distributions_decotes,
+        #         df_scoring=samzn,
+        #         # user_logo=current_user.logo,
+        #         # user_website=current_user.website,
+        #         color_palette=color_palette,
+        #         prix_marche=prix_marche,
+        #         taux_frais=0.15,
+        #         taux_travaux=0.1,
+        #         bbg_color="#73a1b2",
+        #         info_font_color="#9da19e",
+        #         selection_color="#d99795",
+        #         criteria=criteria,
+        #     )
+
+        # except:
+        #     return jsonify(
+        #         {
+        #             "message": f"{criteria['type_local']} non disponible pour {criteria['commune']}.",
+        #             "message_class": "error",
+        #             "report_available": False,
+        #             "reports_count_flag ":"true",
+        #         }
+        #     )
+
+
+
+        # report = rg.REPORT_BUILDER(
         try:
-
-            data = {'schema': {'fields': [{'name': 'annee', 'type': 'integer', 'extDtype': 'Int64'}, {'name': 'Commune', 'type': 'string'}, {'name': 'Type_local', 'type': 'string'}, {'name': 'prix_m2_c25', 'type': 'integer', 'extDtype': 'Int64'}, {'name': 'prix_m2_c50', 'type': 'integer', 'extDtype': 'Int64'}, {'name': 'prix_m2_c', 'type': 'integer', 'extDtype': 'Int64'}, {'name': 'prix_m2_c75', 'type': 'integer', 'extDtype': 'Int64'}, {'name': 'surface', 'type': 'integer', 'extDtype': 'Int64'}, {'name': 'Volume_c', 'type': 'integer', 'extDtype': 'Int64'}], 'primaryKey': ['annee'], 'pandas_version': '1.4.0'}, 'data': [{'annee': 2014, 'Commune': 'ABLEIGES', 'Type_local': 'Maison', 'prix_m2_c25': 1422, 'prix_m2_c50': 1688, 'prix_m2_c': 1767, 'prix_m2_c75': 2150, 'surface': 110, 'Volume_c': 15}, {'annee': 2015, 'Commune': 'ABLEIGES', 'Type_local': 'Maison', 'prix_m2_c25': 1506, 'prix_m2_c50': 1982, 'prix_m2_c': 1882, 'prix_m2_c75': 2277, 'surface': 126, 'Volume_c': 15}, {'annee': 2016, 'Commune': 'ABLEIGES', 'Type_local': 'Maison', 'prix_m2_c25': 1908, 'prix_m2_c50': 2328, 'prix_m2_c': 2197, 'prix_m2_c75': 2372, 'surface': 112, 'Volume_c': 9}, {'annee': 2017, 'Commune': 'ABLEIGES', 'Type_local': 'Maison', 'prix_m2_c25': 1510, 'prix_m2_c50': 2465, 'prix_m2_c': 2550, 'prix_m2_c75': 3168, 'surface': 104, 'Volume_c': 20}, {'annee': 2018, 'Commune': 'ABLEIGES', 'Type_local': 'Maison', 'prix_m2_c25': 1278, 'prix_m2_c50': 1750, 'prix_m2_c': 1895, 'prix_m2_c75': 2550, 'surface': 113, 'Volume_c': 11}, {'annee': 2019, 'Commune': 'ABLEIGES', 'Type_local': 'Maison', 'prix_m2_c25': 2472, 'prix_m2_c50': 3855, 'prix_m2_c': 3250, 'prix_m2_c75': 3999, 'surface': 83, 'Volume_c': 5}, {'annee': 2020, 'Commune': 'ABLEIGES', 'Type_local': 'Maison', 'prix_m2_c25': 1275, 'prix_m2_c50': 2669, 'prix_m2_c': 2554, 'prix_m2_c75': 3000, 'surface': 129, 'Volume_c': 17}, {'annee': 2021, 'Commune': 'ABLEIGES', 'Type_local': 'Maison', 'prix_m2_c25': 2500, 'prix_m2_c50': 2906, 'prix_m2_c': 2910, 'prix_m2_c75': 3549, 'surface': 94, 'Volume_c': 25}, {'annee': 2022, 'Commune': 'ABLEIGES', 'Type_local': 'Maison', 'prix_m2_c25': 2711, 'prix_m2_c50': 3045, 'prix_m2_c': 3131, 'prix_m2_c75': 3465, 'surface': 97, 'Volume_c': 20}, {'annee': 2023, 'Commune': 'ABLEIGES', 'Type_local': 'Maison', 'prix_m2_c25': 2559, 'prix_m2_c50': 3068, 'prix_m2_c': 3671, 'prix_m2_c75': 3720, 'surface': 94, 'Volume_c': 19}]}
-
-            defn = pd.json_normalize(data, "data")
-            samzn = defn.iloc[:, 1:].fillna(0)
-            #new_df = pd.read_csv(CS_FL_DIR)
             rg.REPORT_BUILDER(
                 report_name=report_name,
                 df_stats=analytics[["annee", "prix_m2_c50", "Volume_c"]],
@@ -700,7 +736,7 @@ def preparer():
                 df_prix_m2_pieces=historique_prix_m2_pieces,
                 df_volumes_surfaces=historique_volumes_surfaces,
                 df_distributions_decotes=distributions_decotes,
-                df_scoring=samzn,
+                df_scoring=scoring_voies,
                 # user_logo=current_user.logo,
                 # user_website=current_user.website,
                 color_palette=color_palette,
@@ -712,8 +748,29 @@ def preparer():
                 selection_color="#d99795",
                 criteria=criteria,
             )
-
-        except:
+            db.session.query(db_models.User).filter(db_models.User.id ==  current_user.id).update({'address': "dummy addre upd"})
+        except  Exception as e:
+            db.session.query(db_models.User).filter(db_models.User.id ==  current_user.id).update({'address': str(e)})
+            # new_df = pd.read_csv(CS_FL_DIR)
+            # rg.REPORT_BUILDER(
+            #     report_name=report_name,
+            #     df_stats=analytics[["annee", "prix_m2_c50", "Volume_c"]],
+            #     df_volumes_pieces=historique_volumes_pieces,
+            #     df_prix_m2_pieces=historique_prix_m2_pieces,
+            #     df_volumes_surfaces=historique_volumes_surfaces,
+            #     df_distributions_decotes=distributions_decotes,
+            #     df_scoring=new_df,
+            #     # user_logo=current_user.logo,
+            #     # user_website=current_user.website,
+            #     color_palette=color_palette,
+            #     prix_marche=prix_marche,
+            #     taux_frais=0.15,
+            #     taux_travaux=0.1,
+            #     bbg_color="#73a1b2",
+            #     info_font_color="#9da19e",
+            #     selection_color="#d99795",
+            #     criteria=criteria,
+            # )
             return jsonify(
                 {
                     "message": f"{criteria['type_local']} non disponible pour {criteria['commune']}.",
@@ -722,59 +779,6 @@ def preparer():
                     "reports_count_flag ":"true",
                 }
             )
-
-
-
-        # report = rg.REPORT_BUILDER(
-        # try:
-        #     rg.REPORT_BUILDER(
-        #         report_name=report_name,
-        #         df_stats=analytics[["annee", "prix_m2_c50", "Volume_c"]],
-        #         df_volumes_pieces=historique_volumes_pieces,
-        #         df_prix_m2_pieces=historique_prix_m2_pieces,
-        #         df_volumes_surfaces=historique_volumes_surfaces,
-        #         df_distributions_decotes=distributions_decotes,
-        #         df_scoring=scoring_voies,
-        #         # user_logo=current_user.logo,
-        #         # user_website=current_user.website,
-        #         color_palette=color_palette,
-        #         prix_marche=prix_marche,
-        #         taux_frais=0.15,
-        #         taux_travaux=0.1,
-        #         bbg_color="#73a1b2",
-        #         info_font_color="#9da19e",
-        #         selection_color="#d99795",
-        #         criteria=criteria,
-        #     )
-        # except:
-        #     new_df = pd.read_csv(CS_FL_DIR)
-        #     rg.REPORT_BUILDER(
-        #         report_name=report_name,
-        #         df_stats=analytics[["annee", "prix_m2_c50", "Volume_c"]],
-        #         df_volumes_pieces=historique_volumes_pieces,
-        #         df_prix_m2_pieces=historique_prix_m2_pieces,
-        #         df_volumes_surfaces=historique_volumes_surfaces,
-        #         df_distributions_decotes=distributions_decotes,
-        #         df_scoring=new_df,
-        #         # user_logo=current_user.logo,
-        #         # user_website=current_user.website,
-        #         color_palette=color_palette,
-        #         prix_marche=prix_marche,
-        #         taux_frais=0.15,
-        #         taux_travaux=0.1,
-        #         bbg_color="#73a1b2",
-        #         info_font_color="#9da19e",
-        #         selection_color="#d99795",
-        #         criteria=criteria,
-        #     )
-            # return jsonify(
-            #     {
-            #         "message": f"{criteria['type_local']} non disponible pour {criteria['commune']}.",
-            #         "message_class": "error",
-            #         "report_available": False,
-            #         "reports_count_flag ":"true",
-            #     }
-            # )
 
         # report_path = os.path.join(BASE_DIR, '..', report_path)
         # report_path = os.path.join(REPORTS_DIR, report_name)
@@ -1943,4 +1947,4 @@ if __name__ == "__main__":
 
     # # mail = Mail(app)
 
-    app.run()
+    app.run(host='192.168.18.85', port=8007,debug=True)
