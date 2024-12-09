@@ -231,7 +231,10 @@ color_palette = [
     "#F1BD78",
     "#eeeeee",
 ]
-cities = dg.get_cities()
+try: 
+    cities = dg.get_cities()
+except:
+    cities = ["AMPILLY-LE-SEC","ALPUECH"]
 # def create_app():
 csrf = CSRFProtect(app)  # Enable CSRF protection globally
 # app.secret_key = os.getenv("SECRET_KEY", os.urandom(24))
