@@ -17,7 +17,7 @@ from pathlib import Path
 from google.cloud import storage
 import  stripe
 import  pandas  as  pd
-
+from sqlalchemy import or_
 
 
 from flask import (
@@ -234,7 +234,9 @@ color_palette = [
 try: 
     cities = dg.get_cities()
 except:
-    cities = ["AMPILLY-LE-SEC","ALPUECH"]
+    cities = ["AMPILLY-LE-SEC","ALPUECH","ABITAIN","ACCOLAY","ALEMBON","ALLY","AMPLEPUIS","ADRIERS",
+        "ABLON","ADAST","ABIDOS","ABLIS"
+    ]
 # def create_app():
 csrf = CSRFProtect(app)  # Enable CSRF protection globally
 # app.secret_key = os.getenv("SECRET_KEY", os.urandom(24))
@@ -377,8 +379,8 @@ def confirm_token_expire(token, salt="password-reset-salt", expiration=180):
 @app.route("/")
 @log_execution_time
 def index():
-    if  current_user.is_authenticated:
-        print("curen addr",current_user.address)
+    # if  current_user.is_authenticated:
+    #     print("curen addr",current_user.address,current_user.reports_count)
     return render_template("index.html")
 
 @app.route("/code_form")
@@ -592,7 +594,7 @@ def preparer():
     
     form = MyForm()
     rep_count = False
-    if  db.session.query(db_models.User.query.filter(db_models.User.id==current_user.id).filter(db_models.User.reports_count==0).exists()).scalar():
+    if  db.session.query(db_models.User.query.filter(db_models.User.id==current_user.id).filter(or_(db_models.User.reports_count==0,db_models.User.reports_count == None)).exists()).scalar():
         rep_count = True
     # no_report = request.args.get('no_report') or None
     # print("no_report",no_report)
@@ -842,7 +844,7 @@ def preparer():
     #     pass
     # else:
     #     flash(no_report,"error")
-    # print("preparer cities",cities)
+    #print("preparer rep_count",rep_count)
     return render_template(
         "preparer.html", cities=cities, report_available=False, user=current_user,form=form,
         rep_count=rep_count
