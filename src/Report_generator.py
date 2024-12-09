@@ -77,7 +77,7 @@ class REPORT_BUILDER:
         # self.url_avocat = (user_website,)
         self.cible_decote = 0.6
 
-        self.writer = pd.ExcelWriter(f"static/{report_name}", engine="xlsxwriter")
+        self.writer = pd.ExcelWriter(f"reports/{report_name}", engine="xlsxwriter")
         self.workbook = self.writer.book
         # self.work_book_name = "Report.xlsx"
 
