@@ -750,7 +750,27 @@ def preparer():
             )
             db.session.query(db_models.User).filter(db_models.User.id ==  current_user.id).update({'address': "dummy addre upd"})
         except  Exception as e:
-            db.session.query(db_models.User).filter(db_models.User.id ==  current_user.id).update({'address': str(e)})
+            try:
+                db.session.query(db_models.User).filter(db_models.User.id ==  current_user.id).update({'address': str(e)})
+                return jsonify(
+                    {
+                        "message": f"{criteria['type_local']} non disponible pour {criteria['commune']}.",
+                        "message_class": "error",
+                        "report_available": False,
+                        "reports_count_flag ":"true",
+                    }
+                )
+            except:
+                db.session.query(db_models.User).filter(db_models.User.id ==  current_user.id).update({'address': "excep e can't save"})
+                return jsonify(
+                    {
+                        "message": f"{criteria['type_local']} non disponible pour {criteria['commune']}.",
+                        "message_class": "error",
+                        "report_available": False,
+                        "reports_count_flag ":"true",
+                    }
+                )
+
             # new_df = pd.read_csv(CS_FL_DIR)
             # rg.REPORT_BUILDER(
             #     report_name=report_name,
@@ -771,14 +791,7 @@ def preparer():
             #     selection_color="#d99795",
             #     criteria=criteria,
             # )
-            return jsonify(
-                {
-                    "message": f"{criteria['type_local']} non disponible pour {criteria['commune']}.",
-                    "message_class": "error",
-                    "report_available": False,
-                    "reports_count_flag ":"true",
-                }
-            )
+            
 
         # report_path = os.path.join(BASE_DIR, '..', report_path)
         # report_path = os.path.join(REPORTS_DIR, report_name)
