@@ -618,8 +618,19 @@ def preparer():
 
         criteria = dict(commune=selected_city, type_local=type_bien)
         print("critera dd",criteria)
+        try:
+            year = dg.get_annee_max()["data"][0]["Annee"] + 1
+        except:
+            db.session.query(db_models.User).filter(db_models.User.id ==  current_user.id).update({'address': "error at get_annee_max"})
+            return jsonify(
+                {
+                    "message": f"{criteria['type_local']} non disponible pour {criteria['commune']}.",
+                    "message_class": "error",
+                    "report_available": False,
+                    "reports_count_flag ":"true",
+                }
+            )
 
-        year = dg.get_annee_max()["data"][0]["Annee"] + 1
         report_name = f"{criteria['commune']}_{criteria['type_local']}_{year}"
         report_name = report_name.replace(" ", "_")
 
