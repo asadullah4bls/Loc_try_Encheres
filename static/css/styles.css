@@ -578,6 +578,19 @@ ul li {
     margin: 0 10% 0 10%;
   }
 
+  .buttonPric {
+    background-color: #04AA6D;
+    /* background-color: #73a1b2; */
+    border: none;
+    color: white;
+    padding: 10px 25px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 18px;
+    width:25%;
+    margin: 0 10% 0 10%;
+  }
+
   @media only screen and (max-width: 727px) {
     .columns_wrap {
       display: flex;
@@ -970,6 +983,13 @@ footer .info p {
 /* button disable services / pricing page */
 
 .button.disabled {
+  background-color: gray;
+  color: #ccc;
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
+.buttonPric.disabled {
   background-color: gray;
   color: #ccc;
   pointer-events: none;

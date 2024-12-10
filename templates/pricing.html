@@ -15,10 +15,10 @@
                 <li class="grey">
                     {% if free_flag %}
                         
-                        <a href="{{ url_for('pricing', free_report='121') }}" class="button" style="background-color:#04AA6D; color: white;">Commander</a>
+                        <a href="{{ url_for('pricing', free_report='121') }}" class="buttonPric" style="background-color:#04AA6D; color: white;">Commander</a>
                     {% else %}
                         
-                        <a href="#" class="button disabled">Commander</a>
+                        <a href="#" class="buttonPric disabled">Commander</a>
                     {% endif %}
                 </li>
             </ul>
@@ -36,9 +36,9 @@
 
     <li class="grey">
         {% if  subs_flag %}
-            <a href="{{ url_for('paym_form', package='3') }}" class="button">Commander</a>
+            <a href="{{ url_for('paym_form', package='3') }}" class="buttonPric">Commander</a>
         {%else%}
-            <a href="{{ url_for('paym_form', package='3') }}" class="button  disabled">Commander</a>
+            <a href="{{ url_for('paym_form', package='3') }}" class="buttonPric  disabled">Commander</a>
         {%endif%}
     </li>
     </ul>
@@ -56,9 +56,9 @@
 
     <li class="grey">
         {% if  subs_flag  %}
-            <a href="{{ url_for('paym_form', package='6') }}" class="button">Commander</a>
+            <a href="{{ url_for('paym_form', package='6') }}" class="buttonPric">Commander</a>
         {%else%}
-            <a href="{{ url_for('paym_form', package='6') }}" class="button  disabled">Commander</a>
+            <a href="{{ url_for('paym_form', package='6') }}" class="buttonPric  disabled">Commander</a>
         {%endif%}
     </li>
     </ul>
@@ -76,9 +76,9 @@
 
                 <li class="grey">
         {% if  subs_flag %}
-            <a href="{{ url_for('paym_form', package='12') }}" class="button">Commander</a>
+            <a href="{{ url_for('paym_form', package='12') }}" class="buttonPric">Commander</a>
         {%else%}
-            <a href="{{ url_for('paym_form', package='12') }}" class="button   disabled">Commander</a>
+            <a href="{{ url_for('paym_form', package='12') }}" class="buttonPric   disabled">Commander</a>
         {%endif%}
     </li>
             </ul>
