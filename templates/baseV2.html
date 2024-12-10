@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}My App{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/Menu/style.css') }}">
+    <!-- <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script> -->
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js' crossorigin='anonymous'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js' crossorigin='anonymous'></script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+</head>
+
+<body>
+
+    <!-- Header and Navigation -->
+    <header>
+        <nav id='cssmenu'>
+        <div class="logo"><a href="{{ url_for('index') }}">Encheres</a></div>
+        <div id="head-mobile"></div>
+        <div class="button" style="background-color: transparent;"></div>
+        <ul>
+        <li class="{% if request.endpoint == 'index' %}active{% endif %}"><a href="{{ url_for('index') }}">Accueil</a></li>
+        <li class="{% if request.endpoint == 'outil' %}active{% endif %}"><a href="{{ url_for('outil') }}">Découvrir notre outil</a></li>
+        <li class="{% if request.endpoint == 'pricing' %}active{% endif %}"><a href="{{ url_for('pricing') }}">Politique de prix</a></li>
+        <li class="{% if request.endpoint == 'frais' %}active{% endif %}"><a href="{{ url_for('frais') }}">Simulation des frais</a></li> 
+        <li class="{% if request.endpoint == 'preparer' %}active{% endif %}"><a href="{{ url_for('preparer') }}">Générer vos rapports</a></li>
+        <li><span>PROFILE</span>
+
+            <ul>
+                {% if is_authenticated %}
+                    <li><a href="{{ url_for('logout') }}">Se déconnecter</a></li>
+                    <li><a href="{{ url_for('profile') }}">Profile</a></li>
+                    <li><a href="{{ url_for('reinitialisation') }}">Réinitialiser</a></li>
+                {% else %}
+                    <li><a href="{{ url_for('connexion') }}">Se connecter</a></li>
+                    <li><a href="{{ url_for('inscription') }}">S'inscrire</a></li>
+                    <li><a href="{{ url_for('reinitialisation') }}">Réinitialiser</a></li>
+                {% endif %}
+            </ul>
+        </li>
+        <li  class="{% if request.endpoint == 'contact' %}active{% endif %}"><a href="{{ url_for('contact') }}">CONTACT</a></li>
+        </ul>
+        </nav>
+    </header> 
+
+
+
+    <!-- Main Content -->
+    <main class= full-width-container>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="alert-container">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+
+        {% block content %}
+        {% endblock %}
+
+        <!-- Cookie Consent Banner -->
+        <div id="cookie-consent-banner" style="display: none;">
+            <p>This site uses cookies to enhance your experience. By continuing to visit this site, you agree to our use of cookies.</p>
+            <button id="accept-cookies">Accept</button>
+        </div>
+
+
+    </main>
+
+    {% block footer %}
+        <footer>
+            <div class="info">
+                <h2>Informations de contact</h2>
+                <p>Email : support@monentreprise.com</p>
+                <p>Téléphone : +33 1 23 45 67 89</p>
+                <p>Adresse : 123 Rue de l'Entreprise, 75000 Paris, France</p>
+            </div>
+        </footer>
+    {% endblock %}
+
+</body>
+
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const banner = document.getElementById('cookie-consent-banner');
+        const acceptButton = document.getElementById('accept-cookies');
+
+        // Check if cookies have been accepted
+        if (!localStorage.getItem('cookiesAccepted')) {
+            banner.style.display = 'block';
+        }
+
+        acceptButton.addEventListener('click', function() {
+            localStorage.setItem('cookiesAccepted', 'true');
+            banner.style.display = 'none';
+        });
+    }); 
+
+     
+
+
+    (function($) {
+    $.fn.menumaker = function(options) {  
+    var cssmenu = $(this), settings = $.extend({
+    format: "dropdown",
+    sticky: false
+    }, options);
+    return this.each(function() {
+    $(this).find(".button").on('click', function(){
+        $(this).toggleClass('menu-opened');
+        var mainmenu = $(this).next('ul');
+        if (mainmenu.hasClass('open')) { 
+        mainmenu.slideToggle().removeClass('open');
+        }
+        else {
+        mainmenu.slideToggle().addClass('open');
+        if (settings.format === "dropdown") {
+            mainmenu.find('ul').show();
+        }
+        }
+    });
+    cssmenu.find('li ul').parent().addClass('has-sub');
+    multiTg = function() {
+        cssmenu.find(".has-sub").prepend('<span class="submenu-button"></span>');
+        cssmenu.find('.submenu-button').on('click', function() {
+        $(this).toggleClass('submenu-opened');
+        if ($(this).siblings('ul').hasClass('open')) {
+            $(this).siblings('ul').removeClass('open').slideToggle();
+        }
+        else {
+            $(this).siblings('ul').addClass('open').slideToggle();
+        }
+        });
+    };
+    if (settings.format === 'multitoggle') multiTg();
+    else cssmenu.addClass('dropdown');
+    if (settings.sticky === true) cssmenu.css('position', 'fixed');
+    resizeFix = function() {
+    var mediasize = 700;
+        if ($( window ).width() > mediasize) {
+        cssmenu.find('ul').show();
+        }
+        if ($(window).width() <= mediasize) {
+        cssmenu.find('ul').hide().removeClass('open');
+        }
+    };
+    resizeFix();
+    return $(window).on('resize', resizeFix);
+    });
+    };
+    })(jQuery);
+
+    (function($){
+    $(document).ready(function(){
+    $("#cssmenu").menumaker({
+    format: "multitoggle"
+    });
+    });
+    })(jQuery);
+
+
+
+</script>
+
+</html>

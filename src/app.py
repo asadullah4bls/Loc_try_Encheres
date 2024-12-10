@@ -381,7 +381,7 @@ def confirm_token_expire(token, salt="password-reset-salt", expiration=180):
 def index():
     # if  current_user.is_authenticated:
     #     print("curen addr",current_user.address,current_user.reports_count)
-    return render_template("index.html")
+    return render_template("indexV2.html")
 
 @app.route("/code_form")
 @log_execution_time

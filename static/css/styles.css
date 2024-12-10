@@ -436,6 +436,14 @@ ul li {
           border-left: 5px solid #04AA6D;
       }
 
+      .highlightV2 {
+        background-color: #f9f9f9;
+        padding: 15px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+        border-left: 5px solid #04AA6D;
+    }
+
       .highlight_sub {
           background-color: #f1f1f1;
           padding: 15px;
